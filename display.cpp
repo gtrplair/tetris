@@ -8,6 +8,8 @@
 #define WIDTHWINDOW 700;
 #define HEIGHTWINDOW 700;
 
+// TESTING TETRIS
+
 using namespace std;
 
 int choosingpiece;
