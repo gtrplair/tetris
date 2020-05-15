@@ -35,8 +35,8 @@ void display_plateau(int shape, int width) {
   width /= 2;
   width += 1;
 
-  xsquaresize = 2 * (1-xborder) / width;
-  ysquaresize = 2 * (1-yborder) / width;
+  // xsquaresize = 2 * (1-xborder) / width;
+  // ysquaresize = 2 * (1-yborder) / width;
 
   x1 = -1 + xborder;
   y1 = 1 - yborder;
@@ -314,17 +314,17 @@ int main(int argc, char** argv) {
   cin >> width;
 
   if (shape == 1) {
-    xsquaresize = (2 - 2 * xborder) / (2 * width - 1) * windowy/windowx ;
-    ysquaresize = (2 - 2 * yborder) / (2 * width - 1);
+    xsquaresize = (2 - 2 * xborder) / (width) * windowy/windowx ;
+    ysquaresize = (2 - 2 * yborder) / width;
   }
   if (shape == 2) {
-    xsquaresize = (2 - 2 * xborder) / (2 * width - 1)* windowy/windowx;
-    ysquaresize = (2 - 2 * yborder) / (2 * width - 1);
+    xsquaresize = (2 - 2 * xborder) / (width)* windowy/windowx;
+    ysquaresize = (2 - 2 * yborder) / (width);
   }
 
   if (shape == 3) {
-    xsquaresize = (2 - 2 * xborder) / (2 * width - 1)* windowy/windowx;
-    ysquaresize = (2 - 2 * yborder) / (2 * width - 1);
+    xsquaresize = (2 - 2 * xborder) / (width)* windowy/windowx;
+    ysquaresize = (2 - 2 * yborder) / (width);
   }
 
   xmove_unit = xsquaresize;
