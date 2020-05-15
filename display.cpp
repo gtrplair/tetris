@@ -76,6 +76,7 @@ void display_plateau(int shape, int width)
     }
     break;
   }
+// this is a test
 
   case 2:
   {
