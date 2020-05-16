@@ -13,6 +13,7 @@ using namespace std;
 
 int SCREEN_WIDTH = 1000;
 int SCREEN_HEIGHT = 700;
+float aspect_ratio = SCREEN_HEIGHT / SCREEN_WIDTH;
 
 int choosingpiece;
 float deplacex, deplacey, xx, yy;
@@ -32,11 +33,9 @@ float ybezel = 0.2;
 
 int indice_bloc = 0;
 
-
 int time1;
 float speed = 1.0f;
 int blink = 100;
-
 
 /*
 void display_plateau(int shape, int width) {
@@ -186,7 +185,30 @@ void init() {
   // set fill color to white
   glColor3f(1.0, 1.0, 1.0);
 }
+/*
+void choose_board() {
+  // triangle
+  glBegin(GL_POLYGON);
+  glVertex2f(-0.85 * aspect_ratio, 0);
+  glVertex2f(0, -0.55);
+  glVertex2f(0.15, 0);
+  glEnd();
 
+  // diamond
+  glBegin(GL_QUADS);
+  glVertex2f(-0.15 * aspect_ratio, 0);
+  glVertex2f(0, 0.15);
+  glVertex2f(0.15, 0);
+  glVertex2f(0, -1.5);
+  glEnd();
+
+  // circle
+  glBegin(GL_QUADS);
+
+  glEnd();
+}
+
+*/
 void ProcessNormalKeys(unsigned char key, int x, int y) {
   int c;
 
@@ -206,6 +228,7 @@ void ProcessNormalKeys(unsigned char key, int x, int y) {
       free(current_b);
       current_b = (bloc*)malloc(sizeof(*current_b));
       create_bloc(current_b, g->tabl_bloc[indice_bloc].type);
+      cout << can_be_init(current_b) << endl;
       g->choosing = (g->choosing + 1) % 2;
     }
   }
@@ -249,7 +272,6 @@ void keyboardown(int key, int x, int y) {
         indice_bloc = (indice_bloc + 1) % g->nb_bloc;
       }
       break;
-
 
     case GLUT_KEY_END:
 
@@ -418,14 +440,13 @@ void display() {
   glClear(GL_COLOR_BUFFER_BIT);
 
   dis(g, 1, 1, 1, 1, x0board, y0board);
-  
+
   if (g->choosing == 0) {
     display_bloc(current_b, 1, 0.15, 0.5, 0.15,
                  x0board + current_b->x * xsquaresize,
                  y0board - current_b->y * ysquaresize);
   }
-  
-  
+
   else if (g->choosing == 1) {
     display_bloc(&(g->tabl_bloc[indice_plus]), 0.9, 0.1, 0.1, 0.1, x0board + 1,
                  y0board - 0.2);
@@ -434,7 +455,7 @@ void display() {
     display_bloc(&(g->tabl_bloc[indice_moins]), 0.9, 0.1, 0.1, 0.1, x0board + 1,
                  y0board - 0.8);
   }
-  
+
   glFlush();
 }
 
@@ -455,7 +476,6 @@ void display() {
 
 */
 
-
 void animate(int value) {
   glutTimerFunc(speed, animate, 0);
   time1++;
@@ -464,11 +484,9 @@ void animate(int value) {
   glutPostRedisplay();
 }
 
-
-
 int main(int argc, char** argv) {
   int i;
-  current_b = (bloc*) malloc(sizeof(*current_b));
+  current_b = (bloc*)malloc(sizeof(*current_b));
 
   cout << "Triangle: 1   -   Diamond: 2   -   Circle: 3\n" << endl;
   cin >> shape;
@@ -495,8 +513,6 @@ int main(int argc, char** argv) {
   cout << "AZE" << endl;
   create_board(shape, width);
   cout << "AZER" << endl;
-
-
 
   /*
 create_board(3);
