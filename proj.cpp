@@ -12,6 +12,7 @@ struct bloc{
   int x;
   int y;
   int valide;
+  int type;
 };
 typedef struct bloc bloc;
 
@@ -186,12 +187,13 @@ void alloc_bloc(bloc * b, int val){
   }
 }
 
-void bloc1(bloc * b){
+void bloc1(bloc * b, int type){
   /* 0
      0 0
   */
   b->haut = 2;
   b->larg = 2;
+  b->type = type;
   alloc_bloc(b,1);
   b->mat[0][1] = 0;
   /**********************/
@@ -199,12 +201,13 @@ void bloc1(bloc * b){
   b->x = g->larg/2;
 }
 
-void bloc2(bloc * b){
+void bloc2(bloc * b, int type){
   /*   0
      0 0
   */
   b->haut = 2;
   b->larg = 2;
+  b->type = type;
   alloc_bloc(b,1);
   b->mat[0][0] = 0;
   /**********************/
@@ -212,12 +215,13 @@ void bloc2(bloc * b){
   b->x = g->larg/2-1;
 }
 
-void bloc3(bloc * b){
+void bloc3(bloc * b, int type){
   /* 0
      0 0 0
   */
   b->haut = 2;
   b->larg = 3;
+  b->type = type;
   alloc_bloc(b,1);
   b->mat[0][1] = 0;
   b->mat[0][2] = 0;
@@ -226,13 +230,14 @@ void bloc3(bloc * b){
   b->x = g->larg/2-1;
 }
 
-void bloc4(bloc * b){
+void bloc4(bloc * b, int type){
   /* 0 0
        0
        0
   */
   b->haut = 3;
   b->larg = 2;
+  b->type = type;
   alloc_bloc(b,1);
   b->mat[1][0] = 0;
   b->mat[2][0] = 0;
@@ -241,13 +246,14 @@ void bloc4(bloc * b){
   b->x = g->larg/2-1;
 }
 
-void bloc5(bloc * b){
+void bloc5(bloc * b, int type){
   /* 0
      0 0 
      0
   */
   b->haut = 3;
   b->larg = 2;
+  b->type = type;
   alloc_bloc(b,1);
   b->mat[0][1] = 0;
   b->mat[2][1] = 0;
@@ -256,12 +262,13 @@ void bloc5(bloc * b){
   b->x = g->larg/2;
 }
 
-void bloc6(bloc * b){
+void bloc6(bloc * b, int type){
   /*   0
      0 0 0
   */
   b->haut = 2;
   b->larg = 3;
+  b->type = type;
   alloc_bloc(b,1);
   b->mat[0][0] = 0;
   b->mat[0][2] = 0;
@@ -270,12 +277,13 @@ void bloc6(bloc * b){
   b->x = g->larg/2-1;
 }
 
-void bloc7(bloc * b){
+void bloc7(bloc * b, int type){
   /* 0 0
        0 0
   */
   b->haut = 2;
   b->larg = 3;
+  b->type = type;
   alloc_bloc(b,1);
   b->mat[0][2] = 0;
   b->mat[1][0] = 0;
@@ -283,13 +291,14 @@ void bloc7(bloc * b){
   g->type_board==1 ? (b->y=0, b->x=g->larg/2-1) : (b->y=1, b->x=g->larg/2);
 }
 
-void bloc8(bloc * b){
+void bloc8(bloc * b, int type){
   /* 0 
      0 0
        0
   */
   b->haut = 3;
   b->larg = 2;
+  b->type = type;
   alloc_bloc(b,1);
   b->mat[0][1] = 0;
   b->mat[2][0] = 0;
@@ -298,7 +307,7 @@ void bloc8(bloc * b){
   b->x = g->larg/2;
 }
 
-void bloc9(bloc * b){
+void bloc9(bloc * b, int type){
   /* 0 
      0
      0
@@ -306,30 +315,33 @@ void bloc9(bloc * b){
   */
   b->haut = 4;
   b->larg = 1;
+  b->type = type;
   alloc_bloc(b,1);
   /**********************/
   b->y = 0;
   b->x = g->larg/2;
 }
 
-void bloc10(bloc * b){
+void bloc10(bloc * b, int type){
   /* 0 0 
      0 0
   */
   b->haut = 2;
   b->larg = 2;
+  b->type = type;
   alloc_bloc(b,1);
   /**********************/
   g->type_board==1 ? b->y=0 : b->y=1;
   b->x=g->larg/2;
 }
 
-void bloc11(bloc * b){
+void bloc11(bloc * b, int type){
   /* 0 0
        0
   */
   b->haut = 2;
   b->larg = 2;
+  b->type = type;
   alloc_bloc(b,1);
   b->mat[1][0] = 0;
   /**********************/
@@ -337,12 +349,13 @@ void bloc11(bloc * b){
   b->x=g->larg/2;
 }
 
-void bloc12(bloc * b){
+void bloc12(bloc * b, int type){
   /* 0 0
      0
   */
   b->haut = 2;
   b->larg = 2;
+  b->type = type;
   alloc_bloc(b,1);
   b->mat[1][1] = 0;
   /**********************/
@@ -350,12 +363,13 @@ void bloc12(bloc * b){
   b->x=g->larg/2;
 }
 
-void bloc13(bloc * b){
+void bloc13(bloc * b, int type){
   /*     0
      0 0 0
   */
   b->haut = 2;
   b->larg = 3;
+  b->type = type;
   alloc_bloc(b,1);
   b->mat[0][0] = 0;
   b->mat[0][1] = 0;
@@ -364,13 +378,14 @@ void bloc13(bloc * b){
   b->x = g->larg/2-1;
 }
 
-void bloc14(bloc * b){
+void bloc14(bloc * b, int type){
   /* 0
      0
      0 0
   */
   b->haut = 3;
   b->larg = 2;
+  b->type = type;
   alloc_bloc(b,1);
   b->mat[0][1] = 0;
   b->mat[1][1] = 0;
@@ -379,13 +394,14 @@ void bloc14(bloc * b){
   b->x = g->larg/2;
 }
 
-void bloc15(bloc * b){
+void bloc15(bloc * b, int type){
   /*   0
      0 0
        0
   */
   b->haut = 3;
   b->larg = 2;
+  b->type = type;
   alloc_bloc(b,1);
   b->mat[0][0] = 0;
   b->mat[2][0] = 0;
@@ -394,12 +410,13 @@ void bloc15(bloc * b){
   b->x = g->larg/2-1;
 }
 
-void bloc16(bloc * b){
+void bloc16(bloc * b, int type){
   /* 0 0 0
        0
   */
   b->haut = 2;
   b->larg = 3;
+  b->type = type;
   alloc_bloc(b,1);
   b->mat[1][0] = 0;
   b->mat[1][2] = 0;
@@ -408,12 +425,13 @@ void bloc16(bloc * b){
 }
 
 
-void bloc17(bloc * b){
+void bloc17(bloc * b, int type){
   /*   0 0
      0 0
   */
   b->haut = 2;
   b->larg = 3;
+  b->type = type;
   alloc_bloc(b,1);
   b->mat[0][0] = 0;
   b->mat[1][2] = 0;
@@ -421,13 +439,14 @@ void bloc17(bloc * b){
   g->type_board==1 ? (b->y=0, b->x=g->larg/2-1) : (b->y=1, b->x=g->larg/2-2);
 }
 
-void bloc18(bloc * b){
+void bloc18(bloc * b, int type){
   /*   0
      0 0
      0
   */
   b->haut = 3;
   b->larg = 2;
+  b->type = type;
   alloc_bloc(b,1);
   b->mat[0][0] = 0;
   b->mat[2][1] = 0;
@@ -436,28 +455,30 @@ void bloc18(bloc * b){
   b->x=g->larg/2-1;
 }
 
-void bloc19(bloc * b){
+void bloc19(bloc * b, int type){
   /*  0 0 0 0
   */
   b->haut = 1;
   b->larg = 4;
+  b->type = type;
   alloc_bloc(b,1);
   /**********************/
   g->type_board==1 ? (b->y=0, b->x=g->larg/2-1) : (b->y=2, b->x=g->larg/2-1);
 }
 
-void bloc20(bloc * b){
+void bloc20(bloc * b, int type){
   /*  0
   */
   b->haut = 1;
   b->larg = 1;
+  b->type = type;
   alloc_bloc(b,1);
   /**********************/
   b->y=0;
   b->x=g->larg/2;
 }
 
-void blocC1(bloc * b){
+void blocC1(bloc * b, int type){
   /*  0 0 0 0
       0 0 0 0
       0 0 0 0
@@ -465,13 +486,14 @@ void blocC1(bloc * b){
   */
   b->haut = 4;
   b->larg = 4;
+  b->type = type;
   alloc_bloc(b,1);
   /**********************/
   b->y=0;
   b->x=g->larg/2-1;
 }
 
-void blocC2(bloc * b){
+void blocC2(bloc * b, int type){
   /*    0 0 
       0 0 0 0
       0 0 0 0
@@ -479,6 +501,7 @@ void blocC2(bloc * b){
   */
   b->haut = 4;
   b->larg = 4;
+  b->type = type;
   alloc_bloc(b,1);
   b->mat[0][0] = 0;
   b->mat[0][3] = 0;
@@ -489,7 +512,7 @@ void blocC2(bloc * b){
   b->x=g->larg/2-1;
 }
 
-void blocC3(bloc * b){
+void blocC3(bloc * b, int type){
   /*  0     0
       0     0
       0     0
@@ -498,6 +521,7 @@ void blocC3(bloc * b){
   int i, j;
   b->haut = 4;
   b->larg = 4;
+  b->type = type;
   alloc_bloc(b,1);
   for(i=0 ; i<3 ; i++){
     for(j=1 ; j<3 ; j++){
@@ -509,7 +533,7 @@ void blocC3(bloc * b){
   b->x=g->larg/2-1;
 }
 
-void blocC4(bloc * b){
+void blocC4(bloc * b, int type){
   /*  0 0 0 0
             0
             0
@@ -518,6 +542,7 @@ void blocC4(bloc * b){
   int i, j;
   b->haut = 4;
   b->larg = 4;
+  b->type = type;
   alloc_bloc(b,1);
   for(i=1 ; i<4 ; i++){
     for(j=0 ; j<3 ; j++){
@@ -529,12 +554,13 @@ void blocC4(bloc * b){
   b->x=g->larg/2-1;
 }
 
-void blocC5(bloc * b){
+void blocC5(bloc * b, int type){
   /*  0 0 0 0
       0 0 0 
   */
   b->haut = 2;
   b->larg = 4;
+  b->type = type;
   alloc_bloc(b,1);
   b->mat[1][3] = 0;
   /**********************/
@@ -542,7 +568,7 @@ void blocC5(bloc * b){
   b->x=g->larg/2-1;
 }
 
-void blocC6(bloc * b){
+void blocC6(bloc * b, int type){
   /*  0 0 0
           0
           0
@@ -551,6 +577,7 @@ void blocC6(bloc * b){
   int i, j;
   b->haut = 4;
   b->larg = 3;
+  b->type = type;
   alloc_bloc(b,1);
   for(i=1 ; i<3 ; i++){
     for(j=0 ; j<2 ; j++){
@@ -562,7 +589,7 @@ void blocC6(bloc * b){
   b->x=g->larg/2-1;
 }
 
-void blocC7(bloc * b){
+void blocC7(bloc * b, int type){
   /*  0 0 
       0 0
       0 0   
@@ -570,24 +597,26 @@ void blocC7(bloc * b){
   */
   b->haut = 4;
   b->larg = 2;
+  b->type = type;
   alloc_bloc(b,1);
   /**********************/
   b->y=0;
   b->x=g->larg/2-1;
 }
 
-void blocC8(bloc * b){
+void blocC8(bloc * b, int type){
   /*  0 0 0 0 
       0 0 0 0
   */
   b->haut = 2;
   b->larg = 4;
+  b->type = type;
   alloc_bloc(b,1);
   b->y=0;
   b->x=g->larg/2-1;
 }
 
-void blocC9(bloc * b){
+void blocC9(bloc * b, int type){
   /*  0
       0
       0
@@ -596,19 +625,21 @@ void blocC9(bloc * b){
   */
   b->haut = 5;
   b->larg = 1;
+  b->type = type;
   alloc_bloc(b,1);
   /**********************/
   b->y=0;
   b->x=g->larg/2;
 }
 
-void blocC10(bloc * b){
+void blocC10(bloc * b, int type){
   /*  0 0 0 0 0 
       0       0
   */
   int i;
   b->haut = 2;
   b->larg = 5;
+  b->type = type;
   alloc_bloc(b,1);
   for(i=1 ; i<4 ; i++){
     b->mat[1][i] = 0;
@@ -618,18 +649,19 @@ void blocC10(bloc * b){
   b->x=g->larg/2-2;
 }
 
-void blocC11(bloc * b){
+void blocC11(bloc * b, int type){
   /*  0 0 0 0 0
   */
   b->haut = 1;
   b->larg = 5;
+  b->type = type;
   alloc_bloc(b,1);
   /**********************/
   b->y=0;
   b->x=g->larg/2-2;
 }
 
-void blocC12(bloc * b){
+void blocC12(bloc * b, int type){
   /*  0     
       0     
       0     0
@@ -638,6 +670,7 @@ void blocC12(bloc * b){
   int i, j;
   b->haut = 4;
   b->larg = 4;
+  b->type = type;
   alloc_bloc(b,1);
   for(i=0 ; i<3 ; i++){
     for(j=1 ; j<3 ; j++){
@@ -651,7 +684,7 @@ void blocC12(bloc * b){
   b->x=g->larg/2-1;
 }
 
-void blocL1(bloc * b){
+void blocL1(bloc * b, int type){
   /*      0 0 
         0 0    
       0 0
@@ -660,6 +693,7 @@ void blocL1(bloc * b){
   int i, j;
   b->haut = 4;
   b->larg = 4;
+  b->type = type;
   cout << "EEE" << endl;
   alloc_bloc(b,0);
   cout << "EEE" << endl;
@@ -673,7 +707,7 @@ void blocL1(bloc * b){
   b->x=g->larg/2-3;
 }
 
-void blocL2(bloc * b){
+void blocL2(bloc * b, int type){
   /*  0 0 
         0 0    
           0 0
@@ -682,6 +716,7 @@ void blocL2(bloc * b){
   int i, j;
   b->haut = 4;
   b->larg = 4;
+  b->type = type;
   alloc_bloc(b,0);
   for(i=0 ; i<4 ; i++){
     for(j=i ; j<2+i && j<4 ; j++){
@@ -693,7 +728,7 @@ void blocL2(bloc * b){
   b->x=g->larg/2;
 }
 
-void blocL3(bloc * b){
+void blocL3(bloc * b, int type){
   /*  0 0 0 0
         0 0
         0 0
@@ -702,6 +737,7 @@ void blocL3(bloc * b){
   int i, j;
   b->haut = 4;
   b->larg = 4;
+  b->type = type;
   alloc_bloc(b,1);
   for(i=1 ; i<4 ; i++){
     b->mat[i][0] = 0;
@@ -714,7 +750,7 @@ void blocL3(bloc * b){
   b->x=g->larg/2-1;
 }
 
-void blocL4(bloc * b){
+void blocL4(bloc * b, int type){
   /*  0     0
         0 0
         0 0
@@ -723,6 +759,7 @@ void blocL4(bloc * b){
   int i, j;
   b->haut = 4;
   b->larg = 4;
+  b->type = type;
   alloc_bloc(b,0);
   for(i=0, j=0 ; i<4 ; i++, j++){
     b->mat[i][j] = 1;
@@ -733,7 +770,7 @@ void blocL4(bloc * b){
   b->x=g->larg/2-1;
 }
 
-void blocL5(bloc * b){
+void blocL5(bloc * b, int type){
   /*  0 0 0 0 0
         0 0 0
 	  0
@@ -741,6 +778,7 @@ void blocL5(bloc * b){
   int i, j;
   b->haut = 3;
   b->larg = 5;
+  b->type = type;
   alloc_bloc(b,0);
   for(i=0 ; i<3 ; i++){
     for(j=i ; j<5-i ; j++){
@@ -752,7 +790,7 @@ void blocL5(bloc * b){
   b->x=g->larg/2-2;
 }
 
-void blocL6(bloc * b){
+void blocL6(bloc * b, int type){
   /*  0 0 0 0
       0 0 0 0
       0 0 0 0
@@ -761,13 +799,14 @@ void blocL6(bloc * b){
   int i, j;
   b->haut = 4;
   b->larg = 4;
+  b->type = type;
   alloc_bloc(b,1);
   /**********************/
   b->y=2;
   b->x=g->larg/2-1;
 }
 
-void blocL7(bloc * b){
+void blocL7(bloc * b, int type){
   /*  0 
       0 0
         0 0
@@ -776,6 +815,7 @@ void blocL7(bloc * b){
   int i, j;
   b->haut = 4;
   b->larg = 4;
+  b->type = type;
   alloc_bloc(b,0);
   for(i=0 ; i<4 ; i++){
     for(j=i ; j<i+2 && j<4 ; j++){
@@ -787,7 +827,7 @@ void blocL7(bloc * b){
   b->x=g->larg/2;
 }
 
-void blocL8(bloc * b){
+void blocL8(bloc * b, int type){
   /*       0
          0 0
        0 0
@@ -796,6 +836,7 @@ void blocL8(bloc * b){
   int i, j;
   b->haut = 4;
   b->larg = 4;
+  b->type = type;
   alloc_bloc(b,0);
   for(i=3 ; i>=0 ; i--){
     for(j=3-i ; j<5-i && j<4 ; j++){
@@ -807,7 +848,7 @@ void blocL8(bloc * b){
   b->x=g->larg/2-3;
 }
 
-void blocL9(bloc * b){
+void blocL9(bloc * b, int type){
   /* 0
      0
      0
@@ -817,13 +858,14 @@ void blocL9(bloc * b){
   int i, j;
   b->haut = 5;
   b->larg = 1;
+  b->type = type;
   alloc_bloc(b,1);
   /**********************/
   b->y=0;
   b->x=g->larg/2;
 }
 
-void blocL10(bloc * b){
+void blocL10(bloc * b, int type){
   /*       0
      0 0 0 0
            0
@@ -831,6 +873,7 @@ void blocL10(bloc * b){
   int i;
   b->haut = 3;
   b->larg = 4;
+  b->type = type;
   alloc_bloc(b,1);
   for(i=0 ; i<3 ; i++){
     b->mat[0][i] = 0;
@@ -841,24 +884,26 @@ void blocL10(bloc * b){
   b->x=g->larg/2-2;
 }
 
-void blocL11(bloc * b){
+void blocL11(bloc * b, int type){
   /*  0 0 0 0 0
   */
   b->haut = 1;
   b->larg = 5;
+  b->type = type;
   alloc_bloc(b,1);
   /**********************/
   b->y=2;
   b->x=g->larg/2-2;
 }
 
-void blocL12(bloc * b){
+void blocL12(bloc * b, int type){
   /*  0 0 0 0
             0
   */
   int i;
   b->haut = 2;
   b->larg = 4;
+  b->type = type;
   alloc_bloc(b,1);
   for(i=0 ; i<3 ; i++){
     b->mat[1][i] = 0;
@@ -868,7 +913,7 @@ void blocL12(bloc * b){
   b->x=g->larg/2-1;
 }
 
-void blocL13(bloc * b){
+void blocL13(bloc * b, int type){
   /*  0 0
         0
 	0
@@ -877,6 +922,7 @@ void blocL13(bloc * b){
   int i;
   b->haut = 4;
   b->larg = 2;
+  b->type = type;
   alloc_bloc(b,1);
   for(i=1 ; i<4 ; i++){
     b->mat[i][0] = 0;
@@ -886,7 +932,7 @@ void blocL13(bloc * b){
   b->x=g->larg/2;
 }
 
-void blocL14(bloc * b){
+void blocL14(bloc * b, int type){
   /*  0
       0
       0
@@ -895,6 +941,7 @@ void blocL14(bloc * b){
   int i;
   b->haut = 4;
   b->larg = 2;
+  b->type = type;
   alloc_bloc(b,1);
   for(i=0 ; i<3 ; i++){
     b->mat[i][1] = 0;
@@ -904,7 +951,7 @@ void blocL14(bloc * b){
   b->x=g->larg/2;
 }
 
-void blocT1(bloc * b){
+void blocT1(bloc * b, int type){
   /*  0
       0 0 0
           0
@@ -912,6 +959,7 @@ void blocT1(bloc * b){
   int i;
   b->haut = 3;
   b->larg = 3;
+  b->type = type;
   alloc_bloc(b,1);
   for(i=0 ; i<2 ; i++){
     b->mat[0][i+1] = 0;
@@ -922,7 +970,7 @@ void blocT1(bloc * b){
   b->x=g->larg/2-1;
 }
 
-void blocT2(bloc * b){
+void blocT2(bloc * b, int type){
   /*  0 0
         0 
         0 0
@@ -930,6 +978,7 @@ void blocT2(bloc * b){
   int i;
   b->haut = 3;
   b->larg = 3;
+  b->type = type;
   alloc_bloc(b,1);
   for(i=0 ; i<2 ; i++){
     b->mat[i+1][0] = 0;
@@ -940,7 +989,7 @@ void blocT2(bloc * b){
   b->x=g->larg/2-1;
 }
 
-void blocT3(bloc * b){
+void blocT3(bloc * b, int type){
   /*      0
       0 0 0
       0
@@ -948,6 +997,7 @@ void blocT3(bloc * b){
   int i;
   b->haut = 3;
   b->larg = 3;
+  b->type = type;
   alloc_bloc(b,1);
   for(i=0 ; i<2 ; i++){
     b->mat[0][i] = 0;
@@ -958,7 +1008,7 @@ void blocT3(bloc * b){
   b->x=g->larg/2-1;
 }
 
-void blocT4(bloc * b){
+void blocT4(bloc * b, int type){
   /*    0 0
         0 
       0 0
@@ -966,6 +1016,7 @@ void blocT4(bloc * b){
   int i;
   b->haut = 3;
   b->larg = 3;
+  b->type = type;
   alloc_bloc(b,1);
   for(i=0 ; i<2 ; i++){
     b->mat[i][0] = 0;
@@ -976,7 +1027,7 @@ void blocT4(bloc * b){
   b->x=g->larg/2-1;
 }
 
-void blocT5(bloc * b){
+void blocT5(bloc * b, int type){
   /*      0
         0 
       0 
@@ -984,6 +1035,7 @@ void blocT5(bloc * b){
   int i;
   b->haut = 3;
   b->larg = 3;
+  b->type = type;
   alloc_bloc(b,0);
   for(i=0 ; i<3 ; i++){
     b->mat[2-i][0+i] = 1;
@@ -993,7 +1045,7 @@ void blocT5(bloc * b){
   b->x=g->larg/2-2;
 }
 
-void blocT6(bloc * b){
+void blocT6(bloc * b, int type){
   /*  0
         0 
           0
@@ -1001,6 +1053,7 @@ void blocT6(bloc * b){
   int i;
   b->haut = 3;
   b->larg = 3;
+  b->type = type;
   alloc_bloc(b,0);
   for(i=0 ; i<3 ; i++){
     b->mat[i][i] = 1;
@@ -1010,7 +1063,7 @@ void blocT6(bloc * b){
   b->x=g->larg/2;
 }
 
-void blocT7(bloc * b){
+void blocT7(bloc * b, int type){
   /*  0
       0 
       0
@@ -1018,6 +1071,7 @@ void blocT7(bloc * b){
   int i;
   b->haut = 3;
   b->larg = 3;
+  b->type = type;
   alloc_bloc(b,0);
   for(i=0 ; i<3 ; i++){
     b->mat[i][1] = 1;
@@ -1027,13 +1081,14 @@ void blocT7(bloc * b){
   b->x=g->larg/2;
 }
 
-void blocT8(bloc * b){
+void blocT8(bloc * b, int type){
   /* 
      0 0 0
   */
   int i;
   b->haut = 3;
   b->larg = 3;
+  b->type = type;
   alloc_bloc(b,0);
   for(i=0 ; i<3 ; i++){
     b->mat[1][i] = 1;
@@ -1043,7 +1098,7 @@ void blocT8(bloc * b){
   b->x=g->larg/2-1;
 }
 
-void blocT9(bloc * b){
+void blocT9(bloc * b, int type){
   /* 
      0
      0
@@ -1051,13 +1106,14 @@ void blocT9(bloc * b){
   int i;
   b->haut = 2;
   b->larg = 1;
+  b->type = type;
   alloc_bloc(b,1);
   /**********************/
   b->y=0;
   b->x=g->larg/2;
 }
 
-void blocT10(bloc * b){
+void blocT10(bloc * b, int type){
   /*   0
      0 0 0
        0
@@ -1065,6 +1121,7 @@ void blocT10(bloc * b){
   int i;
   b->haut = 3;
   b->larg = 3;
+  b->type = type;
   alloc_bloc(b,0);
   for(i=0 ; i<3 ; i++){
     b->mat[i][1] = 1;
@@ -1075,13 +1132,14 @@ void blocT10(bloc * b){
   b->x=g->larg/2-1;
 }
 
-void blocT11(bloc * b){
+void blocT11(bloc * b, int type){
   /* 
       0 0
   */
   int i, j;
   b->haut = 1;
   b->larg = 2;
+  b->type = type;
   alloc_bloc(b,1);
   /**********************/
   b->y=1;
@@ -1131,6 +1189,217 @@ void display_board(){
 }
 
 
+void create_bloc(bloc * b, int type){
+
+  cout << "C" << endl << endl;
+
+  switch(type){
+  case 1:
+    bloc1(b,type);
+    break;
+  case 2:
+    bloc2(b,type);
+    break;
+  case 3:
+    bloc3(b,type);
+    break;
+  case 4:
+    bloc4(b,type);
+    break;
+  case 5:
+    bloc5(b,type);
+    break;
+  case 6:
+    bloc6(b,type);
+    break;
+  case 7:
+    bloc7(b,type);
+    break;
+  case 8:
+    bloc8(b,type);
+    break;
+  case 9:
+    bloc9(b,type);
+    break;
+  case 10:
+    bloc10(b,type);
+    break;
+  case 11:
+    bloc11(b,type);
+    break;
+  case 12:
+    bloc12(b,type);
+    break;
+  case 13:
+    bloc13(b,type);
+    break;
+  case 14:
+    bloc14(b,type);
+    break;
+  case 15:
+    bloc15(b,type);
+    break;
+  case 16:
+    bloc16(b,type);
+    break;
+  case 17:
+    bloc17(b,type);
+    break;
+  case 18:
+    bloc18(b,type);
+    break;
+  case 19:
+    bloc19(b,type);
+    break;
+  case 20:
+    bloc20(b,type);
+    break;
+  case 21:
+    blocC1(b,type);
+    break;
+  case 22:
+    blocC2(b,type);
+    break;
+  case 23:
+    blocC3(b,type);
+    break;
+  case 24:
+    blocC4(b,type);
+    break;
+  case 25:
+    blocC5(b,type);
+    break;
+  case 26:
+    blocC6(b,type);
+    break;
+  case 27:
+    blocC7(b,type);
+    break;
+  case 28:
+    blocC8(b,type);
+    break;
+  case 29:
+    blocC9(b,type);
+    break;
+  case 30:
+    blocC10(b,type);
+    break;
+  case 31:
+    blocC11(b,type);
+    break;
+  case 32:
+    blocC12(b,type);
+    break;
+  case 33:
+    blocL1(b,type);
+    break;
+  case 34:
+    blocL2(b,type);
+    break;
+  case 35:
+    blocL3(b,type);
+    break;
+  case 36:
+    blocL4(b,type);
+    break;
+  case 37:
+    blocL5(b,type);
+    break;
+  case 38:
+    blocL6(b,type);
+    break;
+  case 39:
+    blocL7(b,type);
+    break;
+  case 40:
+    blocL8(b,type);
+    break;
+  case 41:
+    blocL9(b,type);
+    break;
+  case 42:
+    blocL10(b,type);
+    break;
+  case 43:
+    blocL11(b,type);
+    break;
+  case 44:
+    blocL12(b,type);
+    break;
+  case 45:
+    blocL13(b,type);
+    break;
+  case 46:
+    blocL14(b,type);
+    break;
+  case 47:
+    blocT1(b,type);
+    break;
+  case 48:
+    blocT2(b,type);
+    break;
+  case 49:
+    blocT3(b,type);
+    break;
+  case 50:
+    blocT4(b,type);
+    break;
+  case 51:
+    blocT5(b,type);
+    break;
+  case 52:
+    blocT6(b,type);
+    break;
+  case 53:
+    blocT7(b,type);
+    break;
+  case 54:
+    blocT8(b,type);
+    break;
+  case 55:
+    blocT9(b,type);
+    break;
+  case 56:
+    blocT10(b,type);
+    break;
+  case 57:
+    blocT11(b,type);
+    break;
+  }
+}
+
+
+
+void init_tabl_bloc(game * g){
+
+  int i;
+  
+  if(g->type_board==1){
+    g->nb_bloc = 32;
+    g->tabl_bloc = (bloc*) malloc(32 * sizeof(*g->tabl_bloc));
+    for(i=20 ; i<32 ; i++){
+      create_bloc(&(g->tabl_bloc[i]),i+1);
+    }
+  }
+  else if(g->type_board==2){
+    g->nb_bloc = 34;
+    g->tabl_bloc = (bloc*) malloc(34 * sizeof(*g->tabl_bloc));
+    for(i=20 ; i<34 ; i++){
+      create_bloc(&(g->tabl_bloc[i]),i+13);
+    }
+  }
+  else{
+    g->nb_bloc = 31;
+    g->tabl_bloc = (bloc*) malloc(31 * sizeof(*g->tabl_bloc));
+    for(i=20 ; i<31 ; i++){
+      create_bloc(&(g->tabl_bloc[i]),i+27);
+    }
+  }
+  for(i=0 ; i<20 ; i++){
+    create_bloc(&(g->tabl_bloc[i]),i+1);
+  }
+}
+
 void create_board(int type, int width){
 
   int i, j, a, b;
@@ -1145,6 +1414,7 @@ void create_board(int type, int width){
     alloc_board(width/2+1,width);
     init_board(0);
     g->type_board = type;
+    init_tabl_bloc(g);
 
 
     for(j=0 ; j<width/2+1 ; j++){
@@ -1184,6 +1454,7 @@ void create_board(int type, int width){
     alloc_board(width,width);
     init_board(0);
     g->type_board = type;
+    init_tabl_bloc(g);
 
     for(j=0 ; j<width/2+1 ; j++){
       for(i=width/2-j ; i<=width/2+j ; i++){
@@ -1205,6 +1476,7 @@ void create_board(int type, int width){
     width /= 2;
     init_board(0);
     g->type_board = type;
+    init_tabl_bloc(g);
     n = 2*width+1;
 
     for (i=0; i<n; i++) {
@@ -1239,184 +1511,6 @@ void display_bloc(bloc * b){
   cout << endl; 
 }
 
-void create_bloc(bloc * b, int type){
-
-  cout << "C" << endl << endl;
-
-  switch(type){
-  case 1:
-    bloc1(b);
-    break;
-  case 2:
-    bloc2(b);
-    break;
-  case 3:
-    bloc3(b);
-    break;
-  case 4:
-    bloc4(b);
-    break;
-  case 5:
-    bloc5(b);
-    break;
-  case 6:
-    bloc6(b);
-    break;
-  case 7:
-    bloc7(b);
-    break;
-  case 8:
-    bloc8(b);
-    break;
-  case 9:
-    bloc9(b);
-    break;
-  case 10:
-    bloc10(b);
-    break;
-  case 11:
-    bloc11(b);
-    break;
-  case 12:
-    bloc12(b);
-    break;
-  case 13:
-    bloc13(b);
-    break;
-  case 14:
-    bloc14(b);
-    break;
-  case 15:
-    bloc15(b);
-    break;
-  case 16:
-    bloc16(b);
-    break;
-  case 17:
-    bloc17(b);
-    break;
-  case 18:
-    bloc18(b);
-    break;
-  case 19:
-    bloc19(b);
-    break;
-  case 20:
-    bloc20(b);
-    break;
-  case 21:
-    blocC1(b);
-    break;
-  case 22:
-    blocC2(b);
-    break;
-  case 23:
-    blocC3(b);
-    break;
-  case 24:
-    blocC4(b);
-    break;
-  case 25:
-    blocC5(b);
-    break;
-  case 26:
-    blocC6(b);
-    break;
-  case 27:
-    blocC7(b);
-    break;
-  case 28:
-    blocC8(b);
-    break;
-  case 29:
-    blocC9(b);
-    break;
-  case 30:
-    blocC10(b);
-    break;
-  case 31:
-    blocC11(b);
-    break;
-  case 32:
-    blocC12(b);
-    break;
-  case 33:
-    blocL1(b);
-    break;
-  case 34:
-    blocL2(b);
-    break;
-  case 35:
-    blocL3(b);
-    break;
-  case 36:
-    blocL4(b);
-    break;
-  case 37:
-    blocL5(b);
-    break;
-  case 38:
-    blocL6(b);
-    break;
-  case 39:
-    blocL7(b);
-    break;
-  case 40:
-    blocL8(b);
-    break;
-  case 41:
-    blocL9(b);
-    break;
-  case 42:
-    blocL10(b);
-    break;
-  case 43:
-    blocL11(b);
-    break;
-  case 44:
-    blocL12(b);
-    break;
-  case 45:
-    blocL13(b);
-    break;
-  case 46:
-    blocL14(b);
-    break;
-  case 47:
-    blocT1(b);
-    break;
-  case 48:
-    blocT2(b);
-    break;
-  case 49:
-    blocT3(b);
-    break;
-  case 50:
-    blocT4(b);
-    break;
-  case 51:
-    blocT5(b);
-    break;
-  case 52:
-    blocT6(b);
-    break;
-  case 53:
-    blocT7(b);
-    break;
-  case 54:
-    blocT8(b);
-    break;
-  case 55:
-    blocT9(b);
-    break;
-  case 56:
-    blocT10(b);
-    break;
-  case 57:
-    blocT11(b);
-    break;
-  }
-}
 
 
 
@@ -1474,35 +1568,6 @@ void test_init_blocs(int width){
 }
 
 
-void init_tabl_bloc(game * g){
-
-  int i;
-  
-  if(g->type_board==1){
-    g->nb_bloc = 32;
-    g->tabl_bloc = (bloc*) malloc(32 * sizeof(*g->tabl_bloc));
-    for(i=20 ; i<32 ; i++){
-      create_bloc(&(g->tabl_bloc[i]),i+1);
-    }
-  }
-  else if(g->type_board==2){
-    g->nb_bloc = 34;
-    g->tabl_bloc = (bloc*) malloc(34 * sizeof(*g->tabl_bloc));
-    for(i=20 ; i<34 ; i++){
-      create_bloc(&(g->tabl_bloc[i]),i+13);
-    }
-  }
-  else{
-    g->nb_bloc = 31;
-    g->tabl_bloc = (bloc*) malloc(31 * sizeof(*g->tabl_bloc));
-    for(i=20 ; i<31 ; i++){
-      create_bloc(&(g->tabl_bloc[i]),i+27);
-    }
-  }
-  for(i=0 ; i<20 ; i++){
-    create_bloc(&(g->tabl_bloc[i]),i+1);
-  }
-}
 
 void display_bloc_tabl(){
 

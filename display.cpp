@@ -30,6 +30,9 @@ float xsquaresize, ysquaresize;
 float xbezel = 0.2;
 float ybezel = 0.2;
 
+int indice_bloc = 0;
+
+/*
 void display_plateau(int shape, int width) {
   int row, c;
 
@@ -168,6 +171,7 @@ void display_plateau(int shape, int width) {
       cout << "Goodbye";
   }
 }
+*/
 
 void init() {
   // set clear color to black
@@ -191,7 +195,7 @@ void ProcessNormalKeys(unsigned char key, int x, int y) {
     }
     free(current_b);
     current_b = (bloc*)malloc(sizeof(*current_b));
-    bloc20(current_b);
+    create_bloc(current_b,20);
   }
   glutPostRedisplay();
 }
@@ -211,12 +215,14 @@ void keyboardown(int key, int x, int y) {
       break;
 
     case GLUT_KEY_UP:
+      indice_bloc = (indice_bloc - 1 + g->nb_bloc) % g->nb_bloc;
       if (can_top(current_b, g) == 1) {
         top(current_b);
       }
       break;
 
     case GLUT_KEY_DOWN:
+      indice_bloc = (indice_bloc + 1) % g->nb_bloc;
       if (can_bot(current_b, g) == 1) {
         bot(current_b);
       }
@@ -385,12 +391,17 @@ void dis(game* g,
 }
 
 void display() {
+  int indice_plus = (indice_bloc+1)%g->nb_bloc;
+  int indice_moins = (indice_bloc-1+g->nb_bloc)%g->nb_bloc;
   glClear(GL_COLOR_BUFFER_BIT);
 
   dis(g, 1, 1, 1, 1, x0board, y0board);
   if (g->choosing == 0) {
     display_bloc(current_b, 1, 0.15, 0.5, 0.15, x0board + current_b->x * xsquaresize,
                  y0board - current_b->y * ysquaresize);
+    display_bloc(&(g->tabl_bloc[indice_plus]), 1, 0.1, 0.1, 0.1, x0board+1, y0board-0.2);
+    display_bloc(&(g->tabl_bloc[indice_bloc]), 1, 1, 1, 1, x0board+1, y0board-0.5);
+    display_bloc(&(g->tabl_bloc[indice_moins]), 1, 0.1, 0.1, 0.1, x0board+1, y0board-0.8);
   }
   glFlush();
 }
@@ -427,7 +438,7 @@ int main(int argc, char** argv) {
   create_board(shape, width);
   cout << "AZER" << endl;
   current_b = (bloc*)malloc(sizeof(*current_b));
-  bloc7(current_b);
+  create_bloc(current_b,7);
   cout << "AZERT" << endl;
 
   /*
@@ -452,7 +463,6 @@ for(i=0 ; i<10 ; i++){
 cout << rand_a_b(0,100);
 }
 */
-
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
   glutInitWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -464,7 +474,9 @@ cout << rand_a_b(0,100);
   // init();
   glutKeyboardFunc(ProcessNormalKeys);
   glutSpecialFunc(keyboardown);
-
   glutPostRedisplay();
   glutMainLoop();
+
 }
+
+
