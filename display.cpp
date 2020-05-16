@@ -11,7 +11,7 @@
 
 using namespace std;
 
-int SCREEN_WIDTH = 700;
+int SCREEN_WIDTH = 1000;
 int SCREEN_HEIGHT = 700;
 
 int choosingpiece;
@@ -27,6 +27,8 @@ float yborder = 0.2;
 float x0board = -1 + xborder;
 float y0board = 1 - yborder;
 float xsquaresize, ysquaresize;
+float xbezel = 0.2 * xsquaresize;
+float ybezel = 0.2 * ysquaresize;
 
 void display_plateau(int shape, int width) {
   int row, c;
@@ -242,14 +244,37 @@ void display_bloc(bloc* b,
                   float x,
                   float y) {
   int i, j;
+  float xbezel, ybezel;
 
   glColor3f(r, g, blue);
-
+/*
   for (i = 0; i < b->haut; i++) {
     for (j = 0; j < b->larg; j++) {
       if (b->mat[i][j] == 1) {
+
+
+
+        glColor3f(r, g, blue);
         glBegin(GL_QUADS);
-        glVertex2f(x + j * xsquaresize * scaling, y - i * ysquaresize * scaling);
+        glVertex2f(x + j * xsquaresize * scaling,
+                   y - i * ysquaresize * scaling);
+        glVertex2f(x + (j + 1) * xsquaresize * scaling,
+                   y - i * ysquaresize * scaling);
+        glVertex2f(x + (j + 1) * xsquaresize * scaling,
+                   y - (i + 1) * ysquaresize * scaling);
+        glVertex2f(x + (j)*xsquaresize * scaling,
+                   y - (i + 1) * ysquaresize * scaling);
+        glEnd();
+
+
+
+
+
+
+        glColor3f(r, g, blue);
+        glBegin(GL_QUADS);
+        glVertex2f(x + j * xsquaresize * scaling,
+                   y - i * ysquaresize * scaling);
         glVertex2f(x + (j + 1) * xsquaresize * scaling,
                    y - i * ysquaresize * scaling);
         glVertex2f(x + (j + 1) * xsquaresize * scaling,
@@ -260,6 +285,24 @@ void display_bloc(bloc* b,
       }
     }
   }
+
+  */
+
+  
+    for (i = 0; i < b->haut; i++) {
+      for (j = 0; j < b->larg; j++) {
+        if (b->mat[i][j] == 1) {
+          glBegin(GL_QUADS);
+          glVertex2f(x + j * xsquaresize * scaling, y - i * ysquaresize *
+    scaling); glVertex2f(x + (j + 1) * xsquaresize * scaling, y - i *
+    ysquaresize * scaling); glVertex2f(x + (j + 1) * xsquaresize * scaling, y -
+    (i + 1) * ysquaresize * scaling); glVertex2f(x + (j)*xsquaresize * scaling,
+                     y - (i + 1) * ysquaresize * scaling);
+          glEnd();
+        }
+      }
+    }
+      
 }
 
 void dis(game* g,
@@ -307,23 +350,22 @@ void display() {
 int main(int argc, char** argv) {
   int i;
 
-
   cout << "Triangle: 1   -   Diamond: 2   -   Circle: 3\n" << endl;
   cin >> shape;
   cout << "Width" << endl;
   cin >> width;
 
   if (shape == 1) {
-    xsquaresize = (2 - 2 * xborder) / (width) * SCREEN_HEIGHT/SCREEN_WIDTH ;
+    xsquaresize = (2 - 2 * xborder) / (width)*SCREEN_HEIGHT / SCREEN_WIDTH;
     ysquaresize = (2 - 2 * yborder) / width;
   }
   if (shape == 2) {
-    xsquaresize = (2 - 2 * xborder) / (width)* SCREEN_HEIGHT/SCREEN_WIDTH;
+    xsquaresize = (2 - 2 * xborder) / (width)*SCREEN_HEIGHT / SCREEN_WIDTH;
     ysquaresize = (2 - 2 * yborder) / (width);
   }
 
   if (shape == 3) {
-    xsquaresize = (2 - 2 * xborder) / (width)* SCREEN_HEIGHT/SCREEN_WIDTH;
+    xsquaresize = (2 - 2 * xborder) / (width)*SCREEN_HEIGHT / SCREEN_WIDTH;
     ysquaresize = (2 - 2 * yborder) / (width);
   }
 
