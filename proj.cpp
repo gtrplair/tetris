@@ -1355,7 +1355,7 @@ void create_bloc(bloc* b, int type) {
 void init_tabl_bloc(game* g) {
   int i;
 
-  if (g->type_board == 1) {
+  if (g->type_board == 3) {
     g->nb_bloc = 32;
     g->tabl_bloc = (bloc*)malloc(32 * sizeof(*g->tabl_bloc));
     for (i = 20; i < 32; i++) {

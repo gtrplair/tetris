@@ -228,7 +228,7 @@ void ProcessNormalKeys(unsigned char key, int x, int y) {
       free(current_b);
       current_b = (bloc*)malloc(sizeof(*current_b));
       create_bloc(current_b, g->tabl_bloc[indice_bloc].type);
-      cout << can_be_init(current_b) << endl;
+      cout << "CAN_BE_INIT" << can_be_init(current_b) << endl;
       g->choosing = (g->choosing + 1) % 2;
     }
   }
