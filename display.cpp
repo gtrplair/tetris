@@ -7,12 +7,12 @@
 
 #include "proj.cpp"
 
-#define WIDTHWINDOW 700;
-#define HEIGHTWINDOW 700;
-
 // TESTING TETRIS
 
 using namespace std;
+
+int SCREEN_WIDTH = 700;
+int SCREEN_HEIGHT = 700;
 
 int choosingpiece;
 float deplacex, deplacey, xx, yy;
@@ -222,7 +222,9 @@ void keyboardown(int key, int x, int y) {
 
     case GLUT_KEY_END:
 
-      choosingpiece *= -1;
+      if (can_right(current_b, g) == 1) {
+        right(current_b);
+      }
 
       break;
 
@@ -305,8 +307,6 @@ void display() {
 int main(int argc, char** argv) {
   int i;
 
-  int windowx = 1000;
-  int windowy = 700;
 
   cout << "Triangle: 1   -   Diamond: 2   -   Circle: 3\n" << endl;
   cin >> shape;
@@ -314,16 +314,16 @@ int main(int argc, char** argv) {
   cin >> width;
 
   if (shape == 1) {
-    xsquaresize = (2 - 2 * xborder) / (width) * windowy/windowx ;
+    xsquaresize = (2 - 2 * xborder) / (width) * SCREEN_HEIGHT/SCREEN_WIDTH ;
     ysquaresize = (2 - 2 * yborder) / width;
   }
   if (shape == 2) {
-    xsquaresize = (2 - 2 * xborder) / (width)* windowy/windowx;
+    xsquaresize = (2 - 2 * xborder) / (width)* SCREEN_HEIGHT/SCREEN_WIDTH;
     ysquaresize = (2 - 2 * yborder) / (width);
   }
 
   if (shape == 3) {
-    xsquaresize = (2 - 2 * xborder) / (width)* windowy/windowx;
+    xsquaresize = (2 - 2 * xborder) / (width)* SCREEN_HEIGHT/SCREEN_WIDTH;
     ysquaresize = (2 - 2 * yborder) / (width);
   }
 
@@ -362,7 +362,7 @@ cout << rand_a_b(0,100);
 
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-  glutInitWindowSize(windowx, windowy);
+  glutInitWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
   glutInitWindowPosition(100, 100);
   glutCreateWindow("TETRIS");
   // glutTimerFunc(1.0, animate, 0);
