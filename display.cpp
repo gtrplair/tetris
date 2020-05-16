@@ -27,8 +27,8 @@ float yborder = 0.2;
 float x0board = -1 + xborder;
 float y0board = 1 - yborder;
 float xsquaresize, ysquaresize;
-float xbezel = 0.2 * xsquaresize;
-float ybezel = 0.2 * ysquaresize;
+float xbezel;
+float ybezel;
 
 void display_plateau(int shape, int width) {
   int row, c;
@@ -244,15 +244,16 @@ void display_bloc(bloc* b,
                   float x,
                   float y) {
   int i, j;
-  float xbezel, ybezel;
+
+  xbezel = 0.2;
+  ybezel = 0.2;
 
   glColor3f(r, g, blue);
-/*
+
   for (i = 0; i < b->haut; i++) {
     for (j = 0; j < b->larg; j++) {
       if (b->mat[i][j] == 1) {
-
-
+        /*
 
         glColor3f(r, g, blue);
         glBegin(GL_QUADS);
@@ -266,29 +267,76 @@ void display_bloc(bloc* b,
                    y - (i + 1) * ysquaresize * scaling);
         glEnd();
 
-
-
-
-
+        */
 
         glColor3f(r, g, blue);
         glBegin(GL_QUADS);
-        glVertex2f(x + j * xsquaresize * scaling,
-                   y - i * ysquaresize * scaling);
+        glVertex2f(x + (j + xbezel) * xsquaresize * scaling,
+                   y - (i + ybezel) * ysquaresize * scaling);
+        glVertex2f(x + (j + 1 - xbezel) * xsquaresize * scaling,
+                   y - (i + ybezel) * ysquaresize * scaling);
+        glVertex2f(x + (j + 1 - xbezel) * xsquaresize * scaling,
+                   y - (i + 1 - ybezel) * ysquaresize * scaling);
+        glVertex2f(x + (j + xbezel) * xsquaresize * scaling,
+                   y - (i + 1 - ybezel) * ysquaresize * scaling);
+        glEnd();
+
+        /////////////////////////////////////////////////////
+
+        glColor3f(r + 0.4*(1-r), g + 0.4*(1-r), blue + 0.4*(1-r));
+        glBegin(GL_QUADS);
+        glVertex2f(x + (j)*xsquaresize * scaling,
+                   y - (i)*ysquaresize * scaling);
+        glVertex2f(x + (j + xbezel) * xsquaresize * scaling,
+                   y - (i + ybezel) * ysquaresize * scaling);
+        glVertex2f(x + (j + xbezel) * xsquaresize * scaling,
+                   y - (i + 1 - ybezel) * ysquaresize * scaling);
+        glVertex2f(x + (j)*xsquaresize * scaling,
+                   y - (i + 1) * ysquaresize * scaling);
+        glEnd();
+
+        glColor3f(r + 0.7*(1-r), g + 0.7*(1-r), blue + 0.7*(1-r));
+        glBegin(GL_QUADS);
+        glVertex2f(x + (j)*xsquaresize * scaling,
+                   y - (i)*ysquaresize * scaling);
         glVertex2f(x + (j + 1) * xsquaresize * scaling,
-                   y - i * ysquaresize * scaling);
+                   y - (i)*ysquaresize * scaling);
+        glVertex2f(x + (j + 1 - xbezel) * xsquaresize * scaling,
+                   y - (i + ybezel) * ysquaresize * scaling);
+        glVertex2f(x + (j + xbezel) * xsquaresize * scaling,
+                   y - (i + ybezel) * ysquaresize * scaling);
+        glEnd();
+
+        glColor3f(0.7*r, 0.7*g, 0.7*blue);
+        glBegin(GL_QUADS);
+        glVertex2f(x + (j + 1 - xbezel) * xsquaresize * scaling,
+                   y - (i + ybezel) * ysquaresize * scaling);
+        glVertex2f(x + (j + 1) * xsquaresize * scaling,
+                   y - (i)*ysquaresize * scaling);
         glVertex2f(x + (j + 1) * xsquaresize * scaling,
                    y - (i + 1) * ysquaresize * scaling);
+        glVertex2f(x + (j + 1 - xbezel) * xsquaresize * scaling,
+                   y - (i + 1 - ybezel) * ysquaresize * scaling);
+        glEnd();
+
+        glColor3f(0.4*r, 0.4*g, 0.4*blue);
+        glBegin(GL_QUADS);
         glVertex2f(x + (j)*xsquaresize * scaling,
+                   y - (i + 1) * ysquaresize * scaling);
+        glVertex2f(x + (j + xbezel) * xsquaresize * scaling,
+                   y - (i + 1 - ybezel) * ysquaresize * scaling);
+        glVertex2f(x + (j + 1 - xbezel) * xsquaresize * scaling,
+                   y - (i + 1 - ybezel) * ysquaresize * scaling);
+        glVertex2f(x + (j + 1) * xsquaresize * scaling,
                    y - (i + 1) * ysquaresize * scaling);
         glEnd();
       }
     }
   }
 
-  */
+  /*
 
-  
+
     for (i = 0; i < b->haut; i++) {
       for (j = 0; j < b->larg; j++) {
         if (b->mat[i][j] == 1) {
@@ -302,7 +350,8 @@ void display_bloc(bloc* b,
         }
       }
     }
-      
+
+*/
 }
 
 void dis(game* g,
@@ -332,6 +381,8 @@ void dis(game* g,
       glVertex2f(x + (j)*xsquaresize * scaling,
                  y - (i + 1) * ysquaresize * scaling);
       glEnd();
+
+      glEnd();
     }
   }
 }
@@ -341,7 +392,7 @@ void display() {
 
   dis(g, 1, 1, 1, 1, x0board, y0board);
   if (g->choosing == 0) {
-    display_bloc(current_b, 1, 1, 1, 1, x0board + current_b->x * xsquaresize,
+    display_bloc(current_b, 1, 0.15, 0.5, 0.15, x0board + current_b->x * xsquaresize,
                  y0board - current_b->y * ysquaresize);
   }
   glFlush();
@@ -371,6 +422,9 @@ int main(int argc, char** argv) {
 
   xmove_unit = xsquaresize;
   ymove_unit = ysquaresize;
+
+ // xbezel = 2 * xsquaresize * SCREEN_WIDTH / SCREEN_HEIGHT;
+ // ybezel = 2 * ysquaresize;
 
   cout << "AZE" << endl;
   create_board(shape, width);
