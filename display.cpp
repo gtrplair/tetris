@@ -27,8 +27,8 @@ float yborder = 0.2;
 float x0board = -1 + xborder;
 float y0board = 1 - yborder;
 float xsquaresize, ysquaresize;
-float xbezel;
-float ybezel;
+float xbezel = 0.2;
+float ybezel = 0.2;
 
 void display_plateau(int shape, int width) {
   int row, c;
@@ -244,9 +244,6 @@ void display_bloc(bloc* b,
                   float x,
                   float y) {
   int i, j;
-
-  xbezel = 0.2;
-  ybezel = 0.2;
 
   glColor3f(r, g, blue);
 
