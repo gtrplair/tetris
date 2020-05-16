@@ -104,7 +104,6 @@ void placement_bloc(bloc * b){
       }
     }
   }
-  g->choosing = 1;
 }
 
 
@@ -1154,7 +1153,7 @@ void alloc_board(int m, int n){
   g->larg = n;
   g->haut = m;
   g->score = 0;
-  g->choosing = 0;
+  g->choosing = 1;
   g->board = (int**) malloc(m * sizeof(*(g->board)));
   g->slide_board = (int**) malloc(m * sizeof(*(g->board)));
 

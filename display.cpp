@@ -32,6 +32,12 @@ float ybezel = 0.2;
 
 int indice_bloc = 0;
 
+
+int time1;
+float speed = 1.0f;
+int blink = 100;
+
+
 /*
 void display_plateau(int shape, int width) {
   int row, c;
@@ -186,16 +192,22 @@ void ProcessNormalKeys(unsigned char key, int x, int y) {
 
   if (key == ' ') {
     cout << "SPACEBAR" << endl;
-    g->choosing = 1;
-    placement_bloc(current_b);
-    for (c = 0; c < g->larg; c++) {
-      if (column_full(c)) {
-        delete_col(c);
+    if (g->choosing == 0) {
+      cout << "111" << endl;
+      placement_bloc(current_b);
+      g->choosing = (g->choosing + 1) % 2;
+      for (c = 0; c < g->larg; c++) {
+        if (column_full(c)) {
+          delete_col(c);
+        }
       }
+    } else {
+      cout << "222" << endl;
+      free(current_b);
+      current_b = (bloc*)malloc(sizeof(*current_b));
+      create_bloc(current_b, g->tabl_bloc[indice_bloc].type);
+      g->choosing = (g->choosing + 1) % 2;
     }
-    free(current_b);
-    current_b = (bloc*)malloc(sizeof(*current_b));
-    create_bloc(current_b,20);
   }
   glutPostRedisplay();
 }
@@ -203,30 +215,41 @@ void ProcessNormalKeys(unsigned char key, int x, int y) {
 void keyboardown(int key, int x, int y) {
   switch (key) {
     case GLUT_KEY_RIGHT:
-      if (can_right(current_b, g) == 1) {
-        right(current_b);
+      if (g->choosing == 0) {
+        if (can_right(current_b, g) == 1) {
+          right(current_b);
+        }
       }
       break;
 
     case GLUT_KEY_LEFT:
-      if (can_left(current_b, g) == 1) {
-        left(current_b);
+      if (g->choosing == 0) {
+        if (can_left(current_b, g) == 1) {
+          left(current_b);
+        }
       }
       break;
 
     case GLUT_KEY_UP:
-      indice_bloc = (indice_bloc - 1 + g->nb_bloc) % g->nb_bloc;
-      if (can_top(current_b, g) == 1) {
-        top(current_b);
+      if (g->choosing == 0) {
+        if (can_top(current_b, g) == 1) {
+          top(current_b);
+        }
+      } else {
+        indice_bloc = (indice_bloc - 1 + g->nb_bloc) % g->nb_bloc;
       }
       break;
 
     case GLUT_KEY_DOWN:
-      indice_bloc = (indice_bloc + 1) % g->nb_bloc;
-      if (can_bot(current_b, g) == 1) {
-        bot(current_b);
+      if (g->choosing == 0) {
+        if (can_bot(current_b, g) == 1) {
+          bot(current_b);
+        }
+      } else {
+        indice_bloc = (indice_bloc + 1) % g->nb_bloc;
       }
       break;
+
 
     case GLUT_KEY_END:
 
@@ -286,7 +309,7 @@ void display_bloc(bloc* b,
 
         /////////////////////////////////////////////////////
 
-        glColor3f(r + 0.4*(1-r), g + 0.4*(1-r), blue + 0.4*(1-r));
+        glColor3f(r + 0.4 * (1 - r), g + 0.4 * (1 - r), blue + 0.4 * (1 - r));
         glBegin(GL_QUADS);
         glVertex2f(x + (j)*xsquaresize * scaling,
                    y - (i)*ysquaresize * scaling);
@@ -298,7 +321,7 @@ void display_bloc(bloc* b,
                    y - (i + 1) * ysquaresize * scaling);
         glEnd();
 
-        glColor3f(r + 0.7*(1-r), g + 0.7*(1-r), blue + 0.7*(1-r));
+        glColor3f(r + 0.7 * (1 - r), g + 0.7 * (1 - r), blue + 0.7 * (1 - r));
         glBegin(GL_QUADS);
         glVertex2f(x + (j)*xsquaresize * scaling,
                    y - (i)*ysquaresize * scaling);
@@ -310,7 +333,7 @@ void display_bloc(bloc* b,
                    y - (i + ybezel) * ysquaresize * scaling);
         glEnd();
 
-        glColor3f(0.7*r, 0.7*g, 0.7*blue);
+        glColor3f(0.7 * r, 0.7 * g, 0.7 * blue);
         glBegin(GL_QUADS);
         glVertex2f(x + (j + 1 - xbezel) * xsquaresize * scaling,
                    y - (i + ybezel) * ysquaresize * scaling);
@@ -322,7 +345,7 @@ void display_bloc(bloc* b,
                    y - (i + 1 - ybezel) * ysquaresize * scaling);
         glEnd();
 
-        glColor3f(0.4*r, 0.4*g, 0.4*blue);
+        glColor3f(0.4 * r, 0.4 * g, 0.4 * blue);
         glBegin(GL_QUADS);
         glVertex2f(x + (j)*xsquaresize * scaling,
                    y - (i + 1) * ysquaresize * scaling);
@@ -346,10 +369,9 @@ void display_bloc(bloc* b,
           glBegin(GL_QUADS);
           glVertex2f(x + j * xsquaresize * scaling, y - i * ysquaresize *
     scaling); glVertex2f(x + (j + 1) * xsquaresize * scaling, y - i *
-    ysquaresize * scaling); glVertex2f(x + (j + 1) * xsquaresize * scaling, y -
-    (i + 1) * ysquaresize * scaling); glVertex2f(x + (j)*xsquaresize * scaling,
-                     y - (i + 1) * ysquaresize * scaling);
-          glEnd();
+    ysquaresize * scaling); glVertex2f(x + (j + 1) * xsquaresize * scaling, y
+    - (i + 1) * ysquaresize * scaling); glVertex2f(x + (j)*xsquaresize *
+    scaling, y - (i + 1) * ysquaresize * scaling); glEnd();
         }
       }
     }
@@ -391,23 +413,62 @@ void dis(game* g,
 }
 
 void display() {
-  int indice_plus = (indice_bloc+1)%g->nb_bloc;
-  int indice_moins = (indice_bloc-1+g->nb_bloc)%g->nb_bloc;
+  int indice_plus = (indice_bloc + 1) % g->nb_bloc;
+  int indice_moins = (indice_bloc - 1 + g->nb_bloc) % g->nb_bloc;
   glClear(GL_COLOR_BUFFER_BIT);
 
   dis(g, 1, 1, 1, 1, x0board, y0board);
+  
   if (g->choosing == 0) {
-    display_bloc(current_b, 1, 0.15, 0.5, 0.15, x0board + current_b->x * xsquaresize,
+    display_bloc(current_b, 1, 0.15, 0.5, 0.15,
+                 x0board + current_b->x * xsquaresize,
                  y0board - current_b->y * ysquaresize);
-    display_bloc(&(g->tabl_bloc[indice_plus]), 1, 0.1, 0.1, 0.1, x0board+1, y0board-0.2);
-    display_bloc(&(g->tabl_bloc[indice_bloc]), 1, 1, 1, 1, x0board+1, y0board-0.5);
-    display_bloc(&(g->tabl_bloc[indice_moins]), 1, 0.1, 0.1, 0.1, x0board+1, y0board-0.8);
   }
+  
+  
+  else if (g->choosing == 1) {
+    display_bloc(&(g->tabl_bloc[indice_plus]), 0.9, 0.1, 0.1, 0.1, x0board + 1,
+                 y0board - 0.2);
+    display_bloc(&(g->tabl_bloc[indice_bloc]), 1.1, 0.9, 0.9, 0.9, x0board + 1,
+                 y0board - 0.5);
+    display_bloc(&(g->tabl_bloc[indice_moins]), 0.9, 0.1, 0.1, 0.1, x0board + 1,
+                 y0board - 0.8);
+  }
+  
   glFlush();
 }
 
+/*
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+*/
+
+
+void animate(int value) {
+  glutTimerFunc(speed, animate, 0);
+  time1++;
+  if (time1 >= blink)
+    time1 = 0;
+  glutPostRedisplay();
+}
+
+
+
 int main(int argc, char** argv) {
   int i;
+  current_b = (bloc*) malloc(sizeof(*current_b));
 
   cout << "Triangle: 1   -   Diamond: 2   -   Circle: 3\n" << endl;
   cin >> shape;
@@ -431,15 +492,11 @@ int main(int argc, char** argv) {
   xmove_unit = xsquaresize;
   ymove_unit = ysquaresize;
 
- // xbezel = 2 * xsquaresize * SCREEN_WIDTH / SCREEN_HEIGHT;
- // ybezel = 2 * ysquaresize;
-
   cout << "AZE" << endl;
   create_board(shape, width);
   cout << "AZER" << endl;
-  current_b = (bloc*)malloc(sizeof(*current_b));
-  create_bloc(current_b,7);
-  cout << "AZERT" << endl;
+
+
 
   /*
 create_board(3);
@@ -450,11 +507,6 @@ cout << endl << endl;
 display_bloc();
 */
   //  test_init_blocs();
-
-  cout << x0board << endl;
-  cout << y0board << endl;
-  cout << current_b->x << endl;
-  cout << current_b->y << endl;
 
   /*
 bestiaire(57,57);
@@ -468,15 +520,11 @@ cout << rand_a_b(0,100);
   glutInitWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
   glutInitWindowPosition(100, 100);
   glutCreateWindow("TETRIS");
-  // glutTimerFunc(1.0, animate, 0);
+  glutTimerFunc(1.0, animate, 0);
   glutDisplayFunc(display);
-  // glutTimerFunc(TIMERSECS, animate, 0);
   // init();
   glutKeyboardFunc(ProcessNormalKeys);
   glutSpecialFunc(keyboardown);
   glutPostRedisplay();
   glutMainLoop();
-
 }
-
-
