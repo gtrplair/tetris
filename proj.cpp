@@ -1,8 +1,20 @@
 // utiliser tableau d'indices pour affichage blocs qu'on peut choisir
+// baser l'affichage bloc sur une fonction qui affiche seulement un carré
+// (facilite le slide, et l'affichage du board);
+//
+
+#include <unistd.h>
 
 #include <iostream>
 
 using namespace std;
+
+struct rgb {
+  double r;
+  double g;
+  double b;
+};
+typedef struct rgb rgb;
 
 struct bloc {
   int** mat;
@@ -23,6 +35,7 @@ struct game {
   int score;
   int type_board;
   bloc* tabl_bloc;
+  rgb* color_tabl;
   int nb_bloc;
   int* indices;
   int choosing;
@@ -36,6 +49,389 @@ int rand_a_b(int a, int b) {
 
 game* g;
 bloc* current_b;
+int indice_bloc = 0;
+
+void init_color_tabl() {
+  int i;
+  srand(time(NULL));
+
+  g->color_tabl = (rgb*)malloc(g->nb_bloc * sizeof(*(g->color_tabl)));
+  for (i = 0; i < g->nb_bloc; i++) {
+    g->color_tabl[i].r =
+        1 / (double(rand_a_b(2, 10))) + 1 / (double(rand_a_b(2, 10)));
+    g->color_tabl[i].g =
+        1 / (double(rand_a_b(2, 10))) + 1 / (double(rand_a_b(2, 10)));
+    g->color_tabl[i].b =
+        1 / (double(rand_a_b(2, 10))) + 1 / (double(rand_a_b(2, 10)));
+    cout << i << endl;
+    cout << g->color_tabl[i].r << " / " << g->color_tabl[i].g << " / "
+         << g->color_tabl[i].b << endl
+         << endl;
+  }
+}
+
+void color_table() {
+  int i = 0;
+  int color_table[64][3];
+
+  color_table[i][0] = 100;
+  color_table[i][1] = 100;
+  color_table[i][2] = 100;
+  i++;
+
+  color_table[i][0] = 0;
+  color_table[i][1] = 0;
+  color_table[i][2] = 255;
+  i++;
+
+  color_table[i][0] = 255;
+  color_table[i][1] = 0;
+  color_table[i][2] = 0;
+  i++;
+
+  color_table[i][0] = 1;
+  color_table[i][1] = 255;
+  color_table[i][2] = 254;
+  i++;
+
+  color_table[i][0] = 255;
+  color_table[i][1] = 166;
+  color_table[i][2] = 254;
+  i++;
+
+  color_table[i][0] = 255;
+  color_table[i][1] = 219;
+  color_table[i][2] = 102;
+  i++;
+
+  color_table[i][0] = 0;
+  color_table[i][1] = 100;
+  color_table[i][2] = 1;
+  i++;
+
+  color_table[i][0] = 1;
+  color_table[i][1] = 0;
+  color_table[i][2] = 103;
+  i++;
+
+  color_table[i][0] = 149;
+  color_table[i][1] = 0;
+  color_table[i][2] = 58;
+  i++;
+
+  color_table[i][0] = 0;
+  color_table[i][1] = 125;
+  color_table[i][2] = 181;
+  i++;
+
+  color_table[i][0] = 255;
+  color_table[i][1] = 0;
+  color_table[i][2] = 246;
+  i++;
+
+  color_table[i][0] = 255;
+  color_table[i][1] = 238;
+  color_table[i][2] = 232;
+  i++;
+
+  color_table[i][0] = 119;
+  color_table[i][1] = 77;
+  color_table[i][2] = 0;
+  i++;
+
+  color_table[i][0] = 144;
+  color_table[i][1] = 251;
+  color_table[i][2] = 146;
+  i++;
+
+  color_table[i][0] = 0;
+  color_table[i][1] = 118;
+  color_table[i][2] = 255;
+  i++;
+
+  color_table[i][0] = 213;
+  color_table[i][1] = 255;
+  color_table[i][2] = 0;
+  i++;
+
+  color_table[i][0] = 255;
+  color_table[i][1] = 147;
+  color_table[i][2] = 126;
+  i++;
+
+  color_table[i][0] = 106;
+  color_table[i][1] = 130;
+  color_table[i][2] = 108;
+  i++;
+
+  color_table[i][0] = 255;
+  color_table[i][1] = 2;
+  color_table[i][2] = 157;
+  i++;
+
+  color_table[i][0] = 254;
+  color_table[i][1] = 137;
+  color_table[i][2] = 0;
+  i++;
+
+  color_table[i][0] = 122;
+  color_table[i][1] = 71;
+  color_table[i][2] = 130;
+  i++;
+
+  color_table[i][0] = 126;
+  color_table[i][1] = 45;
+  color_table[i][2] = 210;
+  i++;
+
+  color_table[i][0] = 133;
+  color_table[i][1] = 169;
+  color_table[i][2] = 0;
+  i++;
+
+  color_table[i][0] = 255;
+  color_table[i][1] = 0;
+  color_table[i][2] = 86;
+  i++;
+
+  color_table[i][0] = 164;
+  color_table[i][1] = 36;
+  color_table[i][2] = 0;
+  i++;
+
+  color_table[i][0] = 0;
+  color_table[i][1] = 174;
+  color_table[i][2] = 126;
+  i++;
+
+  color_table[i][0] = 104;
+  color_table[i][1] = 61;
+  color_table[i][2] = 59;
+  i++;
+
+  color_table[i][0] = 189;
+  color_table[i][1] = 198;
+  color_table[i][2] = 255;
+  i++;
+
+  color_table[i][0] = 38;
+  color_table[i][1] = 52;
+  color_table[i][2] = 0;
+  i++;
+
+  color_table[i][0] = 189;
+  color_table[i][1] = 211;
+  color_table[i][2] = 147;
+  i++;
+
+  color_table[i][0] = 0;
+  color_table[i][1] = 185;
+  color_table[i][2] = 23;
+  i++;
+
+  color_table[i][0] = 158;
+  color_table[i][1] = 0;
+  color_table[i][2] = 142;
+  i++;
+
+  color_table[i][0] = 0;
+  color_table[i][1] = 174;
+  color_table[i][2] = 126;
+  i++;
+
+  color_table[i][0] = 104;
+  color_table[i][1] = 61;
+  color_table[i][2] = 59;
+  i++;
+
+  color_table[i][0] = 189;
+  color_table[i][1] = 198;
+  color_table[i][2] = 255;
+  i++;
+
+  color_table[i][0] = 38;
+  color_table[i][1] = 52;
+  color_table[i][2] = 0;
+  i++;
+
+  color_table[i][0] = 189;
+  color_table[i][1] = 211;
+  color_table[i][2] = 147;
+  i++;
+
+  color_table[i][0] = 0;
+  color_table[i][1] = 185;
+  color_table[i][2] = 23;
+  i++;
+
+  color_table[i][0] = 158;
+  color_table[i][1] = 0;
+  color_table[i][2] = 142;
+  i++;
+
+  color_table[i][0] = 0;
+  color_table[i][1] = 21;
+  color_table[i][2] = 68;
+  i++;
+
+  color_table[i][0] = 194;
+  color_table[i][1] = 140;
+  color_table[i][2] = 159;
+  i++;
+
+  color_table[i][0] = 255;
+  color_table[i][1] = 116;
+  color_table[i][2] = 163;
+  i++;
+
+  color_table[i][0] = 1;
+  color_table[i][1] = 208;
+  color_table[i][2] = 255;
+  i++;
+
+  color_table[i][0] = 0;
+  color_table[i][1] = 71;
+  color_table[i][2] = 84;
+  i++;
+
+  color_table[i][0] = 229;
+  color_table[i][1] = 111;
+  color_table[i][2] = 254;
+  i++;
+
+  color_table[i][0] = 120;
+  color_table[i][1] = 130;
+  color_table[i][2] = 49;
+  i++;
+
+  color_table[i][0] = 14;
+  color_table[i][1] = 76;
+  color_table[i][2] = 161;
+  i++;
+
+  color_table[i][0] = 145;
+  color_table[i][1] = 208;
+  color_table[i][2] = 203;
+  i++;
+
+  color_table[i][0] = 190;
+  color_table[i][1] = 153;
+  color_table[i][2] = 112;
+  i++;
+
+  color_table[i][0] = 150;
+  color_table[i][1] = 138;
+  color_table[i][2] = 232;
+  i++;
+
+  color_table[i][0] = 187;
+  color_table[i][1] = 136;
+  color_table[i][2] = 0;
+  i++;
+
+  color_table[i][0] = 67;
+  color_table[i][1] = 0;
+  color_table[i][2] = 44;
+  i++;
+
+  color_table[i][0] = 222;
+  color_table[i][1] = 255;
+  color_table[i][2] = 116;
+  i++;
+
+  color_table[i][0] = 0;
+  color_table[i][1] = 255;
+  color_table[i][2] = 198;
+  i++;
+
+  color_table[i][0] = 255;
+  color_table[i][1] = 229;
+  color_table[i][2] = 2;
+  i++;
+
+  color_table[i][0] = 98;
+  color_table[i][1] = 14;
+  color_table[i][2] = 0;
+  i++;
+
+  color_table[i][0] = 0;
+  color_table[i][1] = 143;
+  color_table[i][2] = 156;
+  i++;
+
+  color_table[i][0] = 152;
+  color_table[i][1] = 255;
+  color_table[i][2] = 82;
+  i++;
+
+  color_table[i][0] = 117;
+  color_table[i][1] = 255;
+  color_table[i][2] = 177;
+  i++;
+
+  color_table[i][0] = 181;
+  color_table[i][1] = 0;
+  color_table[i][2] = 255;
+  i++;
+
+  color_table[i][0] = 0;
+  color_table[i][1] = 255;
+  color_table[i][2] = 120;
+  i++;
+
+  color_table[i][0] = 255;
+  color_table[i][1] = 110;
+  color_table[i][2] = 65;
+  i++;
+
+  color_table[i][0] = 0;
+  color_table[i][1] = 95;
+  color_table[i][2] = 57;
+  i++;
+
+  color_table[i][0] = 107;
+  color_table[i][1] = 104;
+  color_table[i][2] = 130;
+  i++;
+
+  color_table[i][0] = 95;
+  color_table[i][1] = 173;
+  color_table[i][2] = 78;
+  i++;
+
+  color_table[i][0] = 167;
+  color_table[i][1] = 87;
+  color_table[i][2] = 64;
+  i++;
+
+  color_table[i][0] = 165;
+  color_table[i][1] = 255;
+  color_table[i][2] = 210;
+  i++;
+
+  color_table[i][0] = 255;
+  color_table[i][1] = 177;
+  color_table[i][2] = 103;
+  i++;
+
+  color_table[i][0] = 0;
+  color_table[i][1] = 155;
+  color_table[i][2] = 255;
+  i++;
+
+  color_table[i][0] = 232;
+  color_table[i][1] = 94;
+  color_table[i][2] = 190;
+
+  for (i = 0; i < g->nb_bloc; i++) {
+    g->color_tabl[i].r =
+        (float)color_table[i][0]/255;
+    g->color_tabl[i].g =
+        (float)color_table[i][1]/255;
+    g->color_tabl[i].b =
+        (float)color_table[i][2]/255;
+  }
+}
 
 int can_move(bloc* b, game* g, int m, int n) {
   int i, j;
@@ -93,7 +489,7 @@ void placement_bloc(bloc* b) {
   for (i = 0; i < b->haut; i++) {
     for (j = 0; j < b->larg; j++) {
       if (b->mat[i][j]) {
-        g->board[i + b->y][j + b->x] = 2;
+        g->board[i + b->y][j + b->x] = indice_bloc + 2;
       }
     }
   }
@@ -131,8 +527,18 @@ void delete_col(int c) {
   int i;
 
   for (i = 0; i < g->haut; i++) {
-    if (g->board[i][c] == 2) {
+    if (g->board[i][c] > 1) {
       g->board[i][c] = 1;
+    }
+  }
+}
+
+void delete_row(int r) {
+  int i;
+
+  for (i = 0; i < g->larg; i++) {
+    if (g->board[r][i] > 1) {
+      g->board[r][i] = 1;
     }
   }
 }
@@ -213,7 +619,7 @@ void bloc3(bloc* b, int type) {
   b->mat[0][1] = 0;
   b->mat[0][2] = 0;
   /**********************/
-  g->type_board == 1 ? b->y = 0 : b->y = 1;
+  g->type_board == 3 ? b->y = 0 : b->y = 1;
   b->x = g->larg / 2 - 1;
 }
 
@@ -229,7 +635,7 @@ void bloc4(bloc* b, int type) {
   b->mat[1][0] = 0;
   b->mat[2][0] = 0;
   /**********************/
-  g->type_board == 1 ? b->y = 0 : b->y = 1;
+  g->type_board == 3 ? b->y = 0 : b->y = 1;
   b->x = g->larg / 2 - 1;
 }
 
@@ -275,7 +681,7 @@ void bloc7(bloc* b, int type) {
   b->mat[0][2] = 0;
   b->mat[1][0] = 0;
   /**********************/
-  g->type_board == 1 ? (b->y = 0, b->x = g->larg / 2 - 1)
+  g->type_board == 3 ? (b->y = 0, b->x = g->larg / 2 - 1)
                      : (b->y = 1, b->x = g->larg / 2);
 }
 
@@ -319,7 +725,7 @@ void bloc10(bloc* b, int type) {
   b->type = type;
   alloc_bloc(b, 1);
   /**********************/
-  g->type_board == 1 ? b->y = 0 : b->y = 1;
+  g->type_board == 3 ? b->y = 0 : b->y = 1;
   b->x = g->larg / 2;
 }
 
@@ -333,7 +739,7 @@ void bloc11(bloc* b, int type) {
   alloc_bloc(b, 1);
   b->mat[1][0] = 0;
   /**********************/
-  g->type_board == 1 ? b->y = 0 : b->y = 1;
+  g->type_board == 3 ? b->y = 0 : b->y = 1;
   b->x = g->larg / 2;
 }
 
@@ -347,7 +753,7 @@ void bloc12(bloc* b, int type) {
   alloc_bloc(b, 1);
   b->mat[1][1] = 0;
   /**********************/
-  g->type_board == 1 ? b->y = 0 : b->y = 1;
+  g->type_board == 3 ? b->y = 0 : b->y = 1;
   b->x = g->larg / 2;
 }
 
@@ -362,7 +768,7 @@ void bloc13(bloc* b, int type) {
   b->mat[0][0] = 0;
   b->mat[0][1] = 0;
   /**********************/
-  g->type_board == 1 ? b->y = 0 : b->y = 1;
+  g->type_board == 3 ? b->y = 0 : b->y = 1;
   b->x = g->larg / 2 - 1;
 }
 
@@ -409,7 +815,7 @@ void bloc16(bloc* b, int type) {
   b->mat[1][0] = 0;
   b->mat[1][2] = 0;
   /**********************/
-  g->type_board == 1 ? (b->y = 0, b->x = g->larg / 2 - 1)
+  g->type_board == 3 ? (b->y = 0, b->x = g->larg / 2 - 1)
                      : (b->y = 1, b->x = g->larg / 2 - 1);
 }
 
@@ -424,7 +830,7 @@ void bloc17(bloc* b, int type) {
   b->mat[0][0] = 0;
   b->mat[1][2] = 0;
   /**********************/
-  g->type_board == 1 ? (b->y = 0, b->x = g->larg / 2 - 1)
+  g->type_board == 3 ? (b->y = 0, b->x = g->larg / 2 - 1)
                      : (b->y = 1, b->x = g->larg / 2 - 2);
 }
 
@@ -452,7 +858,7 @@ void bloc19(bloc* b, int type) {
   b->type = type;
   alloc_bloc(b, 1);
   /**********************/
-  g->type_board == 1 ? (b->y = 0, b->x = g->larg / 2 - 1)
+  g->type_board == 3 ? (b->y = 1, b->x = g->larg / 2 - 1)
                      : (b->y = 2, b->x = g->larg / 2 - 1);
 }
 
@@ -479,7 +885,7 @@ void blocC1(bloc* b, int type) {
   b->type = type;
   alloc_bloc(b, 1);
   /**********************/
-  b->y = 0;
+  b->y = 1;
   b->x = g->larg / 2 - 1;
 }
 
@@ -519,7 +925,7 @@ void blocC3(bloc* b, int type) {
     }
   }
   /**********************/
-  b->y = 0;
+  b->y = 1;
   b->x = g->larg / 2 - 1;
 }
 
@@ -540,7 +946,7 @@ void blocC4(bloc* b, int type) {
     }
   }
   /**********************/
-  b->y = 0;
+  b->y = 1;
   b->x = g->larg / 2 - 1;
 }
 
@@ -554,7 +960,7 @@ void blocC5(bloc* b, int type) {
   alloc_bloc(b, 1);
   b->mat[1][3] = 0;
   /**********************/
-  b->y = 0;
+  b->y = 1;
   b->x = g->larg / 2 - 1;
 }
 
@@ -602,7 +1008,7 @@ void blocC8(bloc* b, int type) {
   b->larg = 4;
   b->type = type;
   alloc_bloc(b, 1);
-  b->y = 0;
+  b->y = 1;
   b->x = g->larg / 2 - 1;
 }
 
@@ -635,7 +1041,7 @@ void blocC10(bloc* b, int type) {
     b->mat[1][i] = 0;
   }
   /**********************/
-  b->y = 0;
+  b->y = 1;
   b->x = g->larg / 2 - 2;
 }
 
@@ -647,7 +1053,7 @@ void blocC11(bloc* b, int type) {
   b->type = type;
   alloc_bloc(b, 1);
   /**********************/
-  b->y = 0;
+  b->y = 1;
   b->x = g->larg / 2 - 2;
 }
 
@@ -684,9 +1090,7 @@ void blocL1(bloc* b, int type) {
   b->haut = 4;
   b->larg = 4;
   b->type = type;
-  cout << "EEE" << endl;
   alloc_bloc(b, 0);
-  cout << "EEE" << endl;
   for (i = 0; i < 4; i++) {
     for (j = 3 - i; j > 1 - i && j >= 0; j--) {
       b->mat[i][j] = 1;
@@ -870,7 +1274,7 @@ void blocL10(bloc* b, int type) {
     b->mat[2][i] = 0;
   }
   /**********************/
-  b->y = 2;
+  b->y = 1;
   b->x = g->larg / 2 - 2;
 }
 
@@ -1060,12 +1464,9 @@ void blocT7(bloc* b, int type) {
   */
   int i;
   b->haut = 3;
-  b->larg = 3;
+  b->larg = 1;
   b->type = type;
-  alloc_bloc(b, 0);
-  for (i = 0; i < 3; i++) {
-    b->mat[i][1] = 1;
-  }
+  alloc_bloc(b, 1);
   /**********************/
   b->y = 0;
   b->x = g->larg / 2;
@@ -1076,13 +1477,10 @@ void blocT8(bloc* b, int type) {
      0 0 0
   */
   int i;
-  b->haut = 3;
+  b->haut = 1;
   b->larg = 3;
   b->type = type;
-  alloc_bloc(b, 0);
-  for (i = 0; i < 3; i++) {
-    b->mat[1][i] = 1;
-  }
+  alloc_bloc(b, 1);
   /**********************/
   b->y = 1;
   b->x = g->larg / 2 - 1;
@@ -1178,175 +1576,175 @@ void create_bloc(bloc* b, int type) {
   cout << "C" << endl << endl;
 
   switch (type) {
-    case 1:
+    case 0:
       bloc1(b, type);
       break;
-    case 2:
+    case 1:
       bloc2(b, type);
       break;
-    case 3:
+    case 2:
       bloc3(b, type);
       break;
-    case 4:
+    case 3:
       bloc4(b, type);
       break;
-    case 5:
+    case 4:
       bloc5(b, type);
       break;
-    case 6:
+    case 5:
       bloc6(b, type);
       break;
-    case 7:
+    case 6:
       bloc7(b, type);
       break;
-    case 8:
+    case 7:
       bloc8(b, type);
       break;
-    case 9:
+    case 8:
       bloc9(b, type);
       break;
-    case 10:
+    case 9:
       bloc10(b, type);
       break;
-    case 11:
+    case 10:
       bloc11(b, type);
       break;
-    case 12:
+    case 11:
       bloc12(b, type);
       break;
-    case 13:
+    case 12:
       bloc13(b, type);
       break;
-    case 14:
+    case 13:
       bloc14(b, type);
       break;
-    case 15:
+    case 14:
       bloc15(b, type);
       break;
-    case 16:
+    case 15:
       bloc16(b, type);
       break;
-    case 17:
+    case 16:
       bloc17(b, type);
       break;
-    case 18:
+    case 17:
       bloc18(b, type);
       break;
-    case 19:
+    case 18:
       bloc19(b, type);
       break;
-    case 20:
+    case 19:
       bloc20(b, type);
       break;
-    case 21:
+    case 20:
       blocC1(b, type);
       break;
-    case 22:
+    case 21:
       blocC2(b, type);
       break;
-    case 23:
+    case 22:
       blocC3(b, type);
       break;
-    case 24:
+    case 23:
       blocC4(b, type);
       break;
-    case 25:
+    case 24:
       blocC5(b, type);
       break;
-    case 26:
+    case 25:
       blocC6(b, type);
       break;
-    case 27:
+    case 26:
       blocC7(b, type);
       break;
-    case 28:
+    case 27:
       blocC8(b, type);
       break;
-    case 29:
+    case 28:
       blocC9(b, type);
       break;
-    case 30:
+    case 29:
       blocC10(b, type);
       break;
-    case 31:
+    case 30:
       blocC11(b, type);
       break;
-    case 32:
+    case 31:
       blocC12(b, type);
       break;
-    case 33:
+    case 32:
       blocL1(b, type);
       break;
-    case 34:
+    case 33:
       blocL2(b, type);
       break;
-    case 35:
+    case 34:
       blocL3(b, type);
       break;
-    case 36:
+    case 35:
       blocL4(b, type);
       break;
-    case 37:
+    case 36:
       blocL5(b, type);
       break;
-    case 38:
+    case 37:
       blocL6(b, type);
       break;
-    case 39:
+    case 38:
       blocL7(b, type);
       break;
-    case 40:
+    case 39:
       blocL8(b, type);
       break;
-    case 41:
+    case 40:
       blocL9(b, type);
       break;
-    case 42:
+    case 41:
       blocL10(b, type);
       break;
-    case 43:
+    case 42:
       blocL11(b, type);
       break;
-    case 44:
+    case 43:
       blocL12(b, type);
       break;
-    case 45:
+    case 44:
       blocL13(b, type);
       break;
-    case 46:
+    case 45:
       blocL14(b, type);
       break;
-    case 47:
+    case 46:
       blocT1(b, type);
       break;
-    case 48:
+    case 47:
       blocT2(b, type);
       break;
-    case 49:
+    case 48:
       blocT3(b, type);
       break;
-    case 50:
+    case 49:
       blocT4(b, type);
       break;
-    case 51:
+    case 50:
       blocT5(b, type);
       break;
-    case 52:
+    case 51:
       blocT6(b, type);
       break;
-    case 53:
+    case 52:
       blocT7(b, type);
       break;
-    case 54:
+    case 53:
       blocT8(b, type);
       break;
-    case 55:
+    case 54:
       blocT9(b, type);
       break;
-    case 56:
+    case 55:
       blocT10(b, type);
       break;
-    case 57:
+    case 56:
       blocT11(b, type);
       break;
   }
@@ -1359,23 +1757,23 @@ void init_tabl_bloc(game* g) {
     g->nb_bloc = 32;
     g->tabl_bloc = (bloc*)malloc(32 * sizeof(*g->tabl_bloc));
     for (i = 20; i < 32; i++) {
-      create_bloc(&(g->tabl_bloc[i]), i + 1);
+      create_bloc(&(g->tabl_bloc[i]), i);
     }
   } else if (g->type_board == 2) {
     g->nb_bloc = 34;
     g->tabl_bloc = (bloc*)malloc(34 * sizeof(*g->tabl_bloc));
     for (i = 20; i < 34; i++) {
-      create_bloc(&(g->tabl_bloc[i]), i + 13);
+      create_bloc(&(g->tabl_bloc[i]), i + 12);
     }
   } else {
     g->nb_bloc = 31;
     g->tabl_bloc = (bloc*)malloc(31 * sizeof(*g->tabl_bloc));
     for (i = 20; i < 31; i++) {
-      create_bloc(&(g->tabl_bloc[i]), i + 27);
+      create_bloc(&(g->tabl_bloc[i]), i + 26);
     }
   }
   for (i = 0; i < 20; i++) {
-    create_bloc(&(g->tabl_bloc[i]), i + 1);
+    create_bloc(&(g->tabl_bloc[i]), i);
   }
 }
 
@@ -1400,26 +1798,26 @@ void create_board(int type, int width) {
       break;
 
       /*
-      for(j=3 ; j<18 ; j++){
-        for(i=0 ; i<21 ; i++){
-          g->board[j][i] = 1;
-          g->slide_board[j][i] = 1;
+        for(j=3 ; j<18 ; j++){
+          for(i=0 ; i<21 ; i++){
+            g->board[j][i] = 1;
+            g->slide_board[j][i] = 1;
+          }
         }
-      }
-      for(j=0, a=7 ; j<3 ; j++, a++){
-        for(i=10-a ; i<=10+a ; i++){
-          g->board[j][i] = 1;
-          g->slide_board[j][i] = 1;
+        for(j=0, a=7 ; j<3 ; j++, a++){
+          for(i=10-a ; i<=10+a ; i++){
+            g->board[j][i] = 1;
+            g->slide_board[j][i] = 1;
+          }
         }
-      }
-      for(j=20, a=7 ; j>17 ; j--, a++){
-        for(i=10-a ; i<=10+a ; i++){
-          g->board[j][i] = 1;
-          g->slide_board[j][i] = 1;
+        for(j=20, a=7 ; j>17 ; j--, a++){
+          for(i=10-a ; i<=10+a ; i++){
+            g->board[j][i] = 1;
+            g->slide_board[j][i] = 1;
+          }
         }
-      }
-      break;
-      */
+        break;
+        */
 
     case 2:
       alloc_board(width, width);
