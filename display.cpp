@@ -2,7 +2,6 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-// #include <cstdlib>
 
 #include <iostream>
 
@@ -23,9 +22,12 @@ float ymove_unit;
 
 int shape;
 int width;
-int show_menu = 1;
+int welcome = 1;
+int show_menu = -1;
 int transition = -1;
 int validate_size = -1;
+int shape_select = 1;
+
 float triangle_radius = 0.3;
 float losange_radius = 0.3;
 float circle_radius = 0.3;
@@ -33,7 +35,6 @@ float triangle_center = -0.6;
 float losange_center = 0;
 float circle_center = 0.6;
 float shape_scale = 1.0;
-int shape_select = 1;
 float triangle_red = 0.3;
 float losange_red = 0.3;
 float circle_red = 0.3;
@@ -104,6 +105,92 @@ void move_select_down() {
   big_scale -= (big_scale - small_scale1) / sel_speed;
   small_scale2 += (big_scale - small_scale1) / sel_speed;
   small_scale3 -= (small_scale3 - small_scale1) / sel_speed;
+}
+
+void DisplayMenu(void) {
+  int n;
+
+  char ligne1[] = "WELCOME TO TETRIS 2099";
+  char ligne2[] = "Use the arrows and spacebar to make your choices";
+  char ligne3[] =
+      "Choose if you want all pieces available, or just three random pieces";
+  char ligne4[] = "Choose the shape and size of your game";
+  char ligne7[] = "Select your pieces with the arrow keys and the spacebar";
+  char ligne6[] = "Fill a column or row to make them disappear";
+  char ligne5[] = "The game is over when you cannot play any more pieces";
+  char ligne8[] = "Press spacebar to continue";
+
+  // background
+  // middle
+  glBegin(GL_POLYGON);
+  glColor3f(0.0, 0.0, 0.0);
+  glVertex2f(-1.0, -0.9);
+  glVertex2f(-1.0, 0.9);
+  glVertex2f(1.0, 0.9);
+  glVertex2f(1.0, -0.9);
+  glEnd();
+
+  glColor3f(1.0, 1.0, 1.0);
+  // top
+  glBegin(GL_POLYGON);
+  glVertex2f(1.0, 1.0);
+  glVertex2f(-1.0, 1.0);
+  glVertex2f(-1.0, 0.9);
+  glVertex2f(1.0, 0.9);
+  glEnd();
+  // bottom
+  glBegin(GL_POLYGON);
+  glVertex2f(1.0, -0.9);
+  glVertex2f(-1.0, -0.9);
+  glVertex2f(-1.0, -1.0);
+  glVertex2f(1.0, -1.0);
+  glEnd();
+
+  // text
+
+  glColor3f(0.0, 0.0, 0.0);
+  glRasterPos2f(-0.11, 0.93);
+  for (n = 0; n < 22; n++) {
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne1[n]);
+  }
+
+  glColor3f(1.0, 1.0, 1.0);
+  glRasterPos2f(-0.8, 0.64);
+  for (n = 0; n < 48; n++) {
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne2[n]);
+  }
+
+  glRasterPos2f(-0.8, 0.39);
+  for (n = 0; n < 70; n++) {
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne3[n]);
+  }
+
+  glRasterPos2f(-0.8, 0.14);
+  for (n = 0; n < 38; n++) {
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne4[n]);
+  }
+
+  glRasterPos2f(-0.8, -0.11);
+  for (n = 0; n < 43; n++) {
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne6[n]);
+  }
+
+  glRasterPos2f(-0.8, -0.36);
+  for (n = 0; n < 55; n++) {
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne7[n]);
+  }
+
+  glColor3f(1.0, 0.0, 0.0);
+  glRasterPos2f(-0.8, -0.61);
+  for (n = 0; n < 54; n++) {
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne5[n]);
+  }
+
+  glColor3f(0.0, 0.0, 0.0);
+  glRasterPos2f(-0.8, -0.97);
+  for (n = 0; n < 26; n++) {
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne8[n]);
+  }
 }
 
 void init() {
@@ -259,6 +346,20 @@ void board_size(int shape, int width) {
   width /= 2;
   width += 1;
 
+
+  if (shape == 1) {
+    xsquaresize = (2 - 2 * xborder) / (width)*aspect_ratio;
+    ysquaresize = (2 - 2 * yborder) / width;
+  }
+  if (shape == 2) {
+    xsquaresize = (2 - 2 * xborder) / (width)*aspect_ratio;
+    ysquaresize = (2 - 2 * yborder) / (width);
+  }
+
+  if (shape == 3) {
+    xsquaresize = (2 - 2 * xborder) / (width)*aspect_ratio;
+    ysquaresize = (2 - 2 * yborder) / (width);
+  }
   x1 = -1 + xborder;
   y1 = 1 - yborder;
 
@@ -352,6 +453,8 @@ void board_size(int shape, int width) {
     case 2: {
       int n = 2 * width + 1;
 
+      width -= 1;
+
       int i, j, x, y;
 
       for (i = 0; i < n; i++) {
@@ -360,8 +463,8 @@ void board_size(int shape, int width) {
           y = j - width;
 
           if (x * x + y * y <= width * width + 1) {
-            x1 += i * xsquaresize;
-            y1 -= j * ysquaresize;
+            x1 += (i)*xsquaresize;
+            y1 -= (j)*ysquaresize;
 
             x2 = x1 + xsquaresize;
             y2 = y1 - ysquaresize;
@@ -425,7 +528,7 @@ void ProcessNormalKeys(unsigned char key, int x, int y) {
   if (key == 'v') {
     validate_size *= -1;
     transition *= -1;
-   // show_menu *= -1;
+    // show_menu *= -1;
   }
   /*
   if (key == 's') {
@@ -433,14 +536,14 @@ void ProcessNormalKeys(unsigned char key, int x, int y) {
   }
   */
 
- if (key == 'b') {
-   validate_size *= -1;
-   transition *= -1;
-   show_menu *= -1;   
- }
- if (key == 'p'){
-   width += 2;
- }
+  if (key == 'b') {
+    validate_size *= -1;
+    transition *= -1;
+    show_menu *= -1;
+  }
+  if (key == 'p') {
+    width += 2;
+  }
   glutPostRedisplay();
 }
 
@@ -833,23 +936,28 @@ void display() {
   glVertex2f(-1, -1);
   glEnd();
 
-  if (width < 21){
+  DisplayMenu();
+
+  if (width < 21) {
     width = 37;
   }
-    if (width > 37){
+  if (width > 37) {
     width = 21;
   }
 
-  if (show_menu == 1) {
+  if (welcome == 1) {
+    DisplayMenu();
+  } else if (show_menu == 1) {
+    //  width = 1;
     choose_board();
     highlight_board();
-    if (transition == 1) {
-      transition_board(shape_select);
-    }
-    if (validate_size == 1){
-      board_size(shape_select, width);
-    }
-  } else {
+  } else if (transition == 1) {
+    transition_board(shape_select);
+  } else if (validate_size == 1) {
+    board_size(shape_select, width);
+  }
+
+  else {
     int indice_plus = (indice_bloc + 1) % g->nb_bloc;
     int indice_plus2 = (indice_bloc + 2) % g->nb_bloc;
     int indice_moins = (indice_bloc - 1 + g->nb_bloc) % g->nb_bloc;
@@ -1040,7 +1148,7 @@ int main(int argc, char** argv) {
 
   shape = 1;
   width = 21;
-
+/*
   if (shape == 1) {
     xsquaresize = (2 - 2 * xborder) / (width)*aspect_ratio;
     ysquaresize = (2 - 2 * yborder) / width;
@@ -1054,7 +1162,7 @@ int main(int argc, char** argv) {
     xsquaresize = (2 - 2 * xborder) / (width)*aspect_ratio;
     ysquaresize = (2 - 2 * yborder) / (width);
   }
-
+*/
   cout << "AZE" << endl;
   create_board(shape, width);
   cout << "AZER" << endl;
