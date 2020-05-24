@@ -25,6 +25,7 @@ int shape;
 int width;
 int show_menu = 1;
 int transition = -1;
+int validate_size = -1;
 float triangle_radius = 0.3;
 float losange_radius = 0.3;
 float circle_radius = 0.3;
@@ -125,10 +126,10 @@ void choose_board() {
   glColor3f(losange_red, 0, 0);
   // diamond
   glBegin(GL_QUADS);
-  glVertex2f(-losange_radius * aspect_ratio, 0);
-  glVertex2f(0, losange_radius);
-  glVertex2f(losange_radius * aspect_ratio, 0);
-  glVertex2f(0, -losange_radius);
+  glVertex2f(-losange_radius * aspect_ratio + losange_center, 0);
+  glVertex2f(+losange_center, losange_radius);
+  glVertex2f(losange_radius * aspect_ratio + losange_center, 0);
+  glVertex2f(+losange_center, -losange_radius);
   glEnd();
 
   glColor3f(circle_red, 0, 0);
@@ -155,38 +156,49 @@ void transition_board(int shape_select) {
   switch (shape_select) {
     case 0:
       if (triangle_radius < 0.8) {
-        triangle_radius + 001;
+        triangle_radius += 0.002;
       }
       if (triangle_center < (x0board + 0.8 * aspect_ratio)) {
-        triangle_center += ((x0board + 0.8 * aspect_ratio) + 0.6) / 100;
+        triangle_center += ((x0board + 0.8 * aspect_ratio) + 0.6) / 200;
       }
-      circle_radius -= 0.001;
-      losange_radius -= 0.001;
+      if (circle_radius > 0) {
+        circle_radius -= 0.002;
+      }
+      if (losange_radius > 0) {
+        losange_radius -= 0.002;
+      }
       break;
     case 1:
       if (losange_radius < 0.8) {
-        losange_radius + 001;
+        losange_radius += 0.002;
       }
-      if (losange_center > (x0board + 0.8 * aspect_ratio)) {
-        losange_center -= (x0board + 0.8 * aspect_ratio) / 100;
+      cout << losange_center << "EEEEEEEEEEEEEEEEEEEEEEEEEEEE" << endl;
+      if (losange_center > -0.24) {
+        losange_center -= 0.001;
       }
-      if (losange_radius < 0.8) {
-        losange_radius + 001;
+      if (circle_radius > 0) {
+        circle_radius -= 0.002;
       }
-      circle_radius -= 0.001;
-      triangle_radius -= 0.001;
+      if (triangle_radius > 0) {
+        triangle_radius -= 0.002;
+      }
+      break;
     case 2:
       if (circle_radius < 0.8) {
-        circle_radius + 001;
+        circle_radius += (0.8 - 0.3) / 300;
       }
-      if (circle_center < (x0board + 0.8 * aspect_ratio)) {
-        circle_center -= ((x0board + 0.8 * aspect_ratio) - 0.6) / 100;
+      if (circle_center > (x0board + 0.8 * aspect_ratio)) {
+        circle_center -= (0.6 + x0board + 0.8 * aspect_ratio) / 100;
       }
-      if (circle_radius < 0.8) {
-        circle_radius + 001;
+      if (triangle_radius > 0) {
+        triangle_radius -= 0.002;
       }
-      triangle_radius -= 0.001;
-      losange_radius -= 0.001;
+      if (losange_radius > 0) {
+        losange_radius -= 0.002;
+      }
+      break;
+    default:
+      break;
   }
 }
 
@@ -240,6 +252,141 @@ void highlight_board() {
   }
 }
 
+void board_size(int shape, int width) {
+  int row, c;
+
+  float x1, x2, y1, y2;
+  width /= 2;
+  width += 1;
+
+  x1 = -1 + xborder;
+  y1 = 1 - yborder;
+
+  switch (shape) {
+    case 1: {
+      // Triangle
+
+      for (row = 1; row <= width; row++) {
+        for (c = 0; c < width - row; c++) {
+          x1 += xsquaresize;
+        }
+        for (c = 1; c <= 2 * row - 1; c++) {
+          x2 = x1 + xsquaresize;
+          y2 = y1 - ysquaresize;
+
+          glColor3f(0.90, 0.22, 0);
+
+          glBegin(GL_QUADS);
+          glVertex2f(x2, y1);
+          glVertex2f(x1, y1);
+          glVertex2f(x1, y2);
+          glVertex2f(x2, y2);
+          glEnd();
+
+          x1 += xsquaresize;
+        }
+        x1 = -1 + xborder;
+
+        y1 -= ysquaresize;
+
+        cout << "\n";
+      }
+      break;
+    }
+
+    case 2: {
+      // Diamond
+
+      for (row = 1; row <= width; row++) {
+        for (c = 0; c < width - row; c++) {
+          x1 += xsquaresize;
+        }
+        for (c = 1; c <= 2 * row - 1; c++) {
+          x2 = x1 + xsquaresize;
+          y2 = y1 - ysquaresize;
+
+          glColor3f(0.90, 0.22, 0);
+
+          glBegin(GL_QUADS);
+          glVertex2f(x2, y1);
+          glVertex2f(x1, y1);
+          glVertex2f(x1, y2);
+          glVertex2f(x2, y2);
+          glEnd();
+
+          x1 += xsquaresize;
+        }
+        x1 = -1 + xborder;
+
+        y1 -= ysquaresize;
+
+        cout << "\n";
+      }
+
+      for (row = width; row > 1; row--) {
+        for (c = 0; c < width - row + 1; c++) {
+          x1 += xsquaresize;
+        }
+        for (c = 1; c <= 2 * row - 3; c++) {
+          x2 = x1 + xsquaresize;
+          y2 = y1 - ysquaresize;
+
+          glColor3f(0.90, 0.22, 0);
+
+          glBegin(GL_QUADS);
+          glVertex2f(x2, y1);
+          glVertex2f(x1, y1);
+          glVertex2f(x1, y2);
+          glVertex2f(x2, y2);
+          glEnd();
+
+          x1 += xsquaresize;
+        }
+        x1 = -1 + xborder;
+
+        y1 -= ysquaresize;
+      }
+      break;
+    }
+
+    case 3: {
+      int n = 2 * width + 1;
+
+      int i, j, x, y;
+
+      for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+          x = i - width;
+          y = j - width;
+
+          if (x * x + y * y <= width * width + 1) {
+            x1 += i * xsquaresize;
+            y1 -= j * ysquaresize;
+
+            x2 = x1 + xsquaresize;
+            y2 = y1 - ysquaresize;
+
+            glColor3f(0.90, 0.22, 0);
+
+            glBegin(GL_QUADS);
+            glVertex2f(x2, y1);
+            glVertex2f(x1, y1);
+            glVertex2f(x1, y2);
+            glVertex2f(x2, y2);
+            glEnd();
+          }
+          x1 = -1 + xborder;
+          y1 = 1 - yborder;
+        }
+        cout << "\n";
+      }
+      break;
+    }
+    default:
+      cout << "Goodbye";
+  }
+}
+
 void ProcessNormalKeys(unsigned char key, int x, int y) {
   int i;
 
@@ -274,6 +421,11 @@ void ProcessNormalKeys(unsigned char key, int x, int y) {
   }
   if (key == 'n') {
     transition *= -1;
+  }
+  if (key == 'v') {
+    validate_size *= -1;
+    transition *= -1;
+    show_menu *= -1;
   }
   /*
   if (key == 's') {
@@ -678,6 +830,9 @@ void display() {
     if (transition == 1) {
       transition_board(shape_select);
     }
+    if (validate_size == 1){
+      board_size(shape_select, width);
+    }
   } else {
     int indice_plus = (indice_bloc + 1) % g->nb_bloc;
     int indice_plus2 = (indice_bloc + 2) % g->nb_bloc;
@@ -867,10 +1022,7 @@ int main(int argc, char** argv) {
   int i;
   current_b = (bloc*)malloc(sizeof(*current_b));
 
-  cout << "Triangle: 1   -   Diamond: 2   -   Circle: 3\n" << endl;
-  cin >> shape;
-  cout << "Width" << endl;
-  cin >> width;
+  width = 21;
 
   if (shape == 1) {
     xsquaresize = (2 - 2 * xborder) / (width)*aspect_ratio;
@@ -885,9 +1037,6 @@ int main(int argc, char** argv) {
     xsquaresize = (2 - 2 * xborder) / (width)*aspect_ratio;
     ysquaresize = (2 - 2 * yborder) / (width);
   }
-
-  xmove_unit = xsquaresize;
-  ymove_unit = ysquaresize;
 
   cout << "AZE" << endl;
   create_board(shape, width);
