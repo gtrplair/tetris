@@ -438,6 +438,9 @@ void ProcessNormalKeys(unsigned char key, int x, int y) {
    transition *= -1;
    show_menu *= -1;   
  }
+ if (key == 'p'){
+   width += 2;
+ }
   glutPostRedisplay();
 }
 
