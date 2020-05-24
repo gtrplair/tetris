@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+// #include <cstdlib>
 
 #include <iostream>
 
@@ -13,7 +14,7 @@ using namespace std;
 
 int SCREEN_WIDTH = 1000;
 int SCREEN_HEIGHT = 700;
-float aspect_ratio = SCREEN_HEIGHT / SCREEN_WIDTH;
+float aspect_ratio = (float)SCREEN_HEIGHT / (float)SCREEN_WIDTH;
 
 int choosingpiece;
 float deplacex, deplacey, xx, yy;
@@ -22,6 +23,19 @@ float ymove_unit;
 
 int shape;
 int width;
+int show_menu = 1;
+int transition = -1;
+float triangle_radius = 0.3;
+float losange_radius = 0.3;
+float circle_radius = 0.3;
+float triangle_center = -0.6;
+float losange_center = 0;
+float circle_center = 0.6;
+float shape_scale = 1.0;
+int shape_select = 1;
+float triangle_red = 0.3;
+float losange_red = 0.3;
+float circle_red = 0.3;
 
 float xborder = 0.2;
 float yborder = 0.2;
@@ -98,30 +112,134 @@ void init() {
   // set fill color to white
   glColor3f(1.0, 1.0, 1.0);
 }
-/*
+
 void choose_board() {
+  glColor3f(triangle_red, 0, 0);
   // triangle
   glBegin(GL_POLYGON);
-  glVertex2f(-0.85 * aspect_ratio, 0);
-  glVertex2f(0, -0.55);
-  glVertex2f(0.15, 0);
+  glVertex2f(triangle_center - triangle_radius * aspect_ratio, 0);
+  glVertex2f(triangle_center, triangle_radius);
+  glVertex2f(triangle_center + triangle_radius * aspect_ratio, 0);
   glEnd();
 
+  glColor3f(losange_red, 0, 0);
   // diamond
   glBegin(GL_QUADS);
-  glVertex2f(-0.15 * aspect_ratio, 0);
-  glVertex2f(0, 0.15);
-  glVertex2f(0.15, 0);
-  glVertex2f(0, -1.5);
+  glVertex2f(-losange_radius * aspect_ratio, 0);
+  glVertex2f(0, losange_radius);
+  glVertex2f(losange_radius * aspect_ratio, 0);
+  glVertex2f(0, -losange_radius);
   glEnd();
 
+  glColor3f(circle_red, 0, 0);
   // circle
-  glBegin(GL_QUADS);
+  int edges = 50;
 
+  GLfloat centerx, centery, temp;
+
+  glBegin(GL_POLYGON);
+  temp = 360.0 / (float)edges;
+  for (float i = 0; i < 360; i += temp) {
+    centerx =
+        circle_radius * cos(i * M_PI / 180.0f) * aspect_ratio + circle_center;
+    centery = circle_radius * sin(i * M_PI / 180.0f);
+
+    glVertex2f(centerx, centery);
+    centerx = 0;
+    centery = 0;
+  }
   glEnd();
 }
 
-*/
+void transition_board(int shape_select) {
+  switch (shape_select) {
+    case 0:
+      if (triangle_radius < 0.8) {
+        triangle_radius + 001;
+      }
+      if (triangle_center < (x0board + 0.8 * aspect_ratio)) {
+        triangle_center += ((x0board + 0.8 * aspect_ratio) + 0.6) / 100;
+      }
+      circle_radius -= 0.001;
+      losange_radius -= 0.001;
+      break;
+    case 1:
+      if (losange_radius < 0.8) {
+        losange_radius + 001;
+      }
+      if (losange_center > (x0board + 0.8 * aspect_ratio)) {
+        losange_center -= (x0board + 0.8 * aspect_ratio) / 100;
+      }
+      if (losange_radius < 0.8) {
+        losange_radius + 001;
+      }
+      circle_radius -= 0.001;
+      triangle_radius -= 0.001;
+    case 2:
+      if (circle_radius < 0.8) {
+        circle_radius + 001;
+      }
+      if (circle_center < (x0board + 0.8 * aspect_ratio)) {
+        circle_center -= ((x0board + 0.8 * aspect_ratio) - 0.6) / 100;
+      }
+      if (circle_radius < 0.8) {
+        circle_radius + 001;
+      }
+      triangle_radius -= 0.001;
+      losange_radius -= 0.001;
+  }
+}
+
+void highlight_board() {
+  glColor3f(triangle_red, 0, 0);
+  if (shape_select < 0) {
+    shape_select = 2;
+  }
+  if (shape_select > 2) {
+    shape_select = 0;
+  }
+  glColor3f(losange_red, 0, 0);
+  if (shape_select == 1 && losange_radius < 0.4) {
+    losange_radius += 0.001;
+    losange_red += 0.005;
+    if (triangle_radius > 0.3) {
+      triangle_radius -= 0.001;
+      triangle_red -= 0.005;
+    }
+    if (circle_radius > 0.3) {
+      circle_radius -= 0.001;
+      circle_red -= 0.005;
+    }
+  }
+  glColor3f(triangle_red, 0, 0);
+  if (shape_select == 0 && triangle_radius < 0.4) {
+    triangle_radius += 0.001;
+    triangle_red += 0.005;
+
+    if (losange_radius > 0.3) {
+      losange_radius -= 0.001;
+      losange_red -= 0.005;
+    }
+    if (circle_radius > 0.3) {
+      circle_radius -= 0.001;
+      circle_red -= 0.005;
+    }
+  }
+  glColor3f(circle_red, 0, 0);
+  if (shape_select == 2 && circle_radius < 0.4) {
+    circle_red += 0.005;
+    circle_radius += 0.001;
+    if (triangle_radius > 0.3) {
+      triangle_radius -= 0.001;
+      triangle_red -= 0.005;
+    }
+    if (losange_radius > 0.3) {
+      losange_radius -= 0.001;
+      losange_red -= 0.005;
+    }
+  }
+}
+
 void ProcessNormalKeys(unsigned char key, int x, int y) {
   int i;
 
@@ -151,6 +269,17 @@ void ProcessNormalKeys(unsigned char key, int x, int y) {
       g->choosing = (g->choosing + 1) % 2;
     }
   }
+  if (key == 'm') {
+    show_menu *= -1;
+  }
+  if (key == 'n') {
+    transition *= -1;
+  }
+  /*
+  if (key == 's') {
+    shape_select *= -1;
+  }
+  */
   glutPostRedisplay();
 }
 
@@ -158,6 +287,7 @@ void keyboardown(int key, int x, int y) {
   int i;
   switch (key) {
     case GLUT_KEY_RIGHT:
+      shape_select += 1;
       if (g->choosing == 0) {
         if (can_right(current_b, g) == 1) {
           right(current_b);
@@ -166,6 +296,7 @@ void keyboardown(int key, int x, int y) {
       break;
 
     case GLUT_KEY_LEFT:
+      shape_select -= 1;
       if (g->choosing == 0) {
         if (can_left(current_b, g) == 1) {
           left(current_b);
@@ -198,13 +329,11 @@ void keyboardown(int key, int x, int y) {
       break;
 
     case GLUT_KEY_END:
-
+      shape_select += 1;
       if (can_right(current_b, g) == 1) {
         right(current_b);
       }
-
       break;
-
     default:
       break;
   }
@@ -212,14 +341,14 @@ void keyboardown(int key, int x, int y) {
 }
 
 void display_frame(float scaling,
-                  float r,
-                  float g,
-                  float blue,
-                  float x,
-                  float y) {
+                   float r,
+                   float g,
+                   float blue,
+                   float x,
+                   float y) {
   glColor3f(r, g, blue);
-int i=1;
-int j=1;
+  int i = 1;
+  int j = 1;
   /////////////////////////////////////////////////////
   glColor3f(r + 0.4 * (1 - r), g + 0.4 * (1 - r), blue + 0.4 * (1 - r));
   glBegin(GL_QUADS);
@@ -264,7 +393,6 @@ int j=1;
              y - (i + 1) * ysquaresize * scaling);
   glEnd();
 }
-
 
 void display_bloc(bloc* b,
                   float scaling,
@@ -535,178 +663,202 @@ void affich_board(game* g, float scaling, float x, float y) {
 }
 
 void display() {
-  int indice_plus = (indice_bloc + 1) % g->nb_bloc;
-  int indice_plus2 = (indice_bloc + 2) % g->nb_bloc;
-  int indice_moins = (indice_bloc - 1 + g->nb_bloc) % g->nb_bloc;
-  int indice_moins2 = (indice_bloc - 2 + g->nb_bloc) % g->nb_bloc;
-  glClear(GL_COLOR_BUFFER_BIT);
-  glutSetKeyRepeat(GLUT_KEY_REPEAT_ON);
-  // dis(g, 1, 1, 1, 1, x0board, y0board);
-
-  affich_board(g, 1, x0board, y0board);
-
-  // entourer la piece a selectioner
-  /*
-    glBegin(GL_QUADS);
-    glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
-               y0board - 0.75 + 1.35 * 3 * ysquaresize);
-    glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
-               y0board - 0.75 + 1.35 * 3 * ysquaresize);
-    glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
-               y0board - 0.75 - 1.35 * 3 * ysquaresize);
-    glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
-               y0board - 0.75 - 1.35 * 3 * ysquaresize);
-    glEnd();
-
-    glBegin(GL_QUADS);
-    glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
-               y0board - 0.75 + 1.35 * 3 * ysquaresize);
-    glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
-               y0board - 0.75 + 1.35 * 3 * ysquaresize);
-    glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
-               y0board - 0.75 - 1.35 * 3 * ysquaresize);
-    glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
-               y0board - 0.75 - 1.35 * 3 * ysquaresize);
-    glEnd();
-    */
-
-  if (g->choosing == 0) {
-    display_bloc(current_b, 1, g->color_tabl[indice_bloc].r,
-                 g->color_tabl[indice_bloc].g, g->color_tabl[indice_bloc].b,
-                 x0board + current_b->x * xsquaresize,
-                 y0board - current_b->y * ysquaresize);
-  }
-
-  else if (g->choosing == 1) {
-    glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
-    if ((select_counter == 1) && (counter < sel_speed)) {
-      move_select_up();
-      counter++;
-      if (counter == sel_speed - 1) {
-        indice_bloc = (indice_bloc - 1 + g->nb_bloc) % g->nb_bloc;
-        select_reset();
-      }
-    }
-    if ((select_counter == -1) && (counter < sel_speed)) {
-      move_select_down();
-      counter++;
-      if (counter == sel_speed - 1) {
-        indice_bloc = (indice_bloc + 1) % g->nb_bloc;
-        select_reset();
-      }
-    }
-    display_bloc(
-        &(g->tabl_bloc[indice_plus2]), small_scale1,
-        g->color_tabl[indice_plus2].r, g->color_tabl[indice_plus2].g,
-        g->color_tabl[indice_plus2].b,
-        x0board + 1.5 -
-            small_scale1 * xsquaresize * (g->tabl_bloc[indice_plus2]).larg / 2,
-        y0board - ypos1 +
-            (small_scale1 * ysquaresize * (g->tabl_bloc[indice_plus2]).haut /
-             2));
-    display_bloc(
-        &(g->tabl_bloc[indice_plus]), small_scale2,
-        g->color_tabl[indice_plus].r, g->color_tabl[indice_plus].g,
-        g->color_tabl[indice_plus].b,
-        x0board + 1.5 -
-            small_scale2 * xsquaresize * (g->tabl_bloc[indice_plus]).larg / 2,
-        y0board - ypos2 +
-            (small_scale2 * ysquaresize * (g->tabl_bloc[indice_plus]).haut /
-             2));
-    display_bloc(
-        &(g->tabl_bloc[indice_moins]), small_scale3,
-        g->color_tabl[indice_moins].r, g->color_tabl[indice_moins].g,
-        g->color_tabl[indice_moins].b,
-        x0board + 1.5 -
-            small_scale3 * xsquaresize * (g->tabl_bloc[indice_moins]).larg / 2,
-        y0board - ypos4 +
-            (small_scale3 * ysquaresize * (g->tabl_bloc[indice_moins]).haut /
-             2));
-    display_bloc(
-        &(g->tabl_bloc[indice_moins2]), small_scale1,
-        g->color_tabl[indice_moins2].r, g->color_tabl[indice_moins2].g,
-        g->color_tabl[indice_moins2].b,
-        x0board + 1.5 -
-            small_scale1 * xsquaresize * (g->tabl_bloc[indice_moins2]).larg / 2,
-        y0board - ypos5 +
-            (small_scale1 * ysquaresize * (g->tabl_bloc[indice_moins2]).haut /
-             2));
-    // piece de blocs a selectionner
-    display_bloc(
-        &(g->tabl_bloc[indice_bloc]), big_scale, g->color_tabl[indice_bloc].r,
-        g->color_tabl[indice_bloc].g, g->color_tabl[indice_bloc].b,
-        x0board + 1.5 -
-            big_scale * xsquaresize * (g->tabl_bloc[indice_bloc]).larg / 2,
-        y0board - ypos3 +
-            (big_scale * ysquaresize * (g->tabl_bloc[indice_bloc]).haut / 2));
-  }
+  // background
   glColor3f(0, 0, 0);
   glBegin(GL_QUADS);
-  glVertex2f(0.6, 1);
+  glVertex2f(-1, 1);
   glVertex2f(1, 1);
-  glVertex2f(1, 0.52);
-  glVertex2f(0.6, 0.52);
-  glEnd();
-
-  glBegin(GL_QUADS);
-  glVertex2f(0.6, -1);
   glVertex2f(1, -1);
-  glVertex2f(1, -0.42);
-  glVertex2f(0.6, -0.42);
+  glVertex2f(-1, -1);
   glEnd();
 
-  // entourer la piece a selectioner
-/*
-  glColor3f(0, 1, 0);
-  display_frame(9, 0,1,0, x0board+1.5-9*xsquaresize*1.35, y0board - 0.75 + 1.35 * 8 * ysquaresize);
-  glColor3f(0, 0, 1);
-  display_frame(7, 0,1,0, x0board+1.5-7.5*xsquaresize*1.35, y0board - 0.75 + 1.35 * 13 * ysquaresize);
-*/
-/*
-  glBegin(GL_QUADS);
-  glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
-             y0board - 0.75 + 1.35 * 3 * ysquaresize);
-  glVertex2f(x0board + 1.5 - 2.7 * xsquaresize * 1.35,
-             y0board - 0.75 + 1.35 * 3 * ysquaresize);
-  glVertex2f(x0board + 1.5 - 2.7 * xsquaresize * 1.35,
-             y0board - 0.75 - 1.35 * 3 * ysquaresize);
-  glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
-             y0board - 0.75 - 1.35 * 3 * ysquaresize);
-  glEnd();
+  if (show_menu == 1) {
+    choose_board();
+    highlight_board();
+    if (transition == 1) {
+      transition_board(shape_select);
+    }
+  } else {
+    int indice_plus = (indice_bloc + 1) % g->nb_bloc;
+    int indice_plus2 = (indice_bloc + 2) % g->nb_bloc;
+    int indice_moins = (indice_bloc - 1 + g->nb_bloc) % g->nb_bloc;
+    int indice_moins2 = (indice_bloc - 2 + g->nb_bloc) % g->nb_bloc;
+    glClear(GL_COLOR_BUFFER_BIT);
+    glutSetKeyRepeat(GLUT_KEY_REPEAT_ON);
+    // dis(g, 1, 1, 1, 1, x0board, y0board);
 
-  glBegin(GL_QUADS);
-  glVertex2f(x0board + 1.5 + 2.7 * xsquaresize * 1.35,
-             y0board - 0.75 + 1.35 * 3 * ysquaresize);
-  glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
-             y0board - 0.75 + 1.35 * 3 * ysquaresize);
-  glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
-             y0board - 0.75 - 1.35 * 3 * ysquaresize);
-  glVertex2f(x0board + 1.5 + 2.7 * xsquaresize * 1.35,
-             y0board - 0.75 - 1.35 * 3 * ysquaresize);
-  glEnd();
+    affich_board(g, 1, x0board, y0board);
 
-  glBegin(GL_QUADS);
-  glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
-             y0board - 0.75 + 1.35 * 3 * ysquaresize);
-  glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
-             y0board - 0.75 + 1.35 * 3 * ysquaresize);
-  glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
-             y0board - 0.75 + 1.35 * 2.7 * ysquaresize);
-  glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
-             y0board - 0.75 + 1.35 * 2.7 * ysquaresize);
-  glEnd();
+    // entourer la piece a selectioner
+    /*
+      glBegin(GL_QUADS);
+      glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
+                 y0board - 0.75 + 1.35 * 3 * ysquaresize);
+      glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
+                 y0board - 0.75 + 1.35 * 3 * ysquaresize);
+      glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
+                 y0board - 0.75 - 1.35 * 3 * ysquaresize);
+      glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
+                 y0board - 0.75 - 1.35 * 3 * ysquaresize);
+      glEnd();
 
-  glBegin(GL_QUADS);
-  glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
-             y0board - 0.75 - 1.35 * 3 * ysquaresize);
-  glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
-             y0board - 0.75 - 1.35 * 3 * ysquaresize);
-  glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
-             y0board - 0.75 - 1.35 * 2.7 * ysquaresize);
-  glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
-             y0board - 0.75 - 1.35 * 2.7 * ysquaresize);
-  glEnd();
-  */
+      glBegin(GL_QUADS);
+      glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
+                 y0board - 0.75 + 1.35 * 3 * ysquaresize);
+      glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
+                 y0board - 0.75 + 1.35 * 3 * ysquaresize);
+      glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
+                 y0board - 0.75 - 1.35 * 3 * ysquaresize);
+      glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
+                 y0board - 0.75 - 1.35 * 3 * ysquaresize);
+      glEnd();
+      */
+
+    if (g->choosing == 0) {
+      display_bloc(current_b, 1, g->color_tabl[indice_bloc].r,
+                   g->color_tabl[indice_bloc].g, g->color_tabl[indice_bloc].b,
+                   x0board + current_b->x * xsquaresize,
+                   y0board - current_b->y * ysquaresize);
+    }
+
+    else if (g->choosing == 1) {
+      glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
+      if ((select_counter == 1) && (counter < sel_speed)) {
+        move_select_up();
+        counter++;
+        if (counter == sel_speed - 1) {
+          indice_bloc = (indice_bloc - 1 + g->nb_bloc) % g->nb_bloc;
+          select_reset();
+        }
+      }
+      if ((select_counter == -1) && (counter < sel_speed)) {
+        move_select_down();
+        counter++;
+        if (counter == sel_speed - 1) {
+          indice_bloc = (indice_bloc + 1) % g->nb_bloc;
+          select_reset();
+        }
+      }
+      display_bloc(&(g->tabl_bloc[indice_plus2]), small_scale1,
+                   g->color_tabl[indice_plus2].r, g->color_tabl[indice_plus2].g,
+                   g->color_tabl[indice_plus2].b,
+                   x0board + 1.5 -
+                       small_scale1 * xsquaresize *
+                           (g->tabl_bloc[indice_plus2]).larg / 2,
+                   y0board - ypos1 +
+                       (small_scale1 * ysquaresize *
+                        (g->tabl_bloc[indice_plus2]).haut / 2));
+      display_bloc(
+          &(g->tabl_bloc[indice_plus]), small_scale2,
+          g->color_tabl[indice_plus].r, g->color_tabl[indice_plus].g,
+          g->color_tabl[indice_plus].b,
+          x0board + 1.5 -
+              small_scale2 * xsquaresize * (g->tabl_bloc[indice_plus]).larg / 2,
+          y0board - ypos2 +
+              (small_scale2 * ysquaresize * (g->tabl_bloc[indice_plus]).haut /
+               2));
+      display_bloc(&(g->tabl_bloc[indice_moins]), small_scale3,
+                   g->color_tabl[indice_moins].r, g->color_tabl[indice_moins].g,
+                   g->color_tabl[indice_moins].b,
+                   x0board + 1.5 -
+                       small_scale3 * xsquaresize *
+                           (g->tabl_bloc[indice_moins]).larg / 2,
+                   y0board - ypos4 +
+                       (small_scale3 * ysquaresize *
+                        (g->tabl_bloc[indice_moins]).haut / 2));
+      display_bloc(&(g->tabl_bloc[indice_moins2]), small_scale1,
+                   g->color_tabl[indice_moins2].r,
+                   g->color_tabl[indice_moins2].g,
+                   g->color_tabl[indice_moins2].b,
+                   x0board + 1.5 -
+                       small_scale1 * xsquaresize *
+                           (g->tabl_bloc[indice_moins2]).larg / 2,
+                   y0board - ypos5 +
+                       (small_scale1 * ysquaresize *
+                        (g->tabl_bloc[indice_moins2]).haut / 2));
+      // piece de blocs a selectionner
+      display_bloc(
+          &(g->tabl_bloc[indice_bloc]), big_scale, g->color_tabl[indice_bloc].r,
+          g->color_tabl[indice_bloc].g, g->color_tabl[indice_bloc].b,
+          x0board + 1.5 -
+              big_scale * xsquaresize * (g->tabl_bloc[indice_bloc]).larg / 2,
+          y0board - ypos3 +
+              (big_scale * ysquaresize * (g->tabl_bloc[indice_bloc]).haut / 2));
+    }
+    glColor3f(0, 0, 0);
+    glBegin(GL_QUADS);
+    glVertex2f(0.6, 1);
+    glVertex2f(1, 1);
+    glVertex2f(1, 0.52);
+    glVertex2f(0.6, 0.52);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glVertex2f(0.6, -1);
+    glVertex2f(1, -1);
+    glVertex2f(1, -0.42);
+    glVertex2f(0.6, -0.42);
+    glEnd();
+
+    // entourer la piece a selectioner
+
+    glColor3f(0, 1, 0);
+    display_frame(9, 0, 1, 0, x0board + 1.5 - 1.35 * xsquaresize * 7 / 2,
+                  y0board - 0.73 + (1.35 * ysquaresize * 7 / 2));
+
+    /*
+      glColor3f(1, 0, 1);
+      display_frame(7, 0,1,0, x0board+1.5-7.5*xsquaresize*1.35, y0board - 0.75
+      + 1.35 * 13 * ysquaresize);
+
+    */
+
+    /*
+      glBegin(GL_QUADS);
+      glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
+                 y0board - 0.75 + 1.35 * 3 * ysquaresize);
+      glVertex2f(x0board + 1.5 - 2.7 * xsquaresize * 1.35,
+                 y0board - 0.75 + 1.35 * 3 * ysquaresize);
+      glVertex2f(x0board + 1.5 - 2.7 * xsquaresize * 1.35,
+                 y0board - 0.75 - 1.35 * 3 * ysquaresize);
+      glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
+                 y0board - 0.75 - 1.35 * 3 * ysquaresize);
+      glEnd();
+
+      glBegin(GL_QUADS);
+      glVertex2f(x0board + 1.5 + 2.7 * xsquaresize * 1.35,
+                 y0board - 0.75 + 1.35 * 3 * ysquaresize);
+      glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
+                 y0board - 0.75 + 1.35 * 3 * ysquaresize);
+      glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
+                 y0board - 0.75 - 1.35 * 3 * ysquaresize);
+      glVertex2f(x0board + 1.5 + 2.7 * xsquaresize * 1.35,
+                 y0board - 0.75 - 1.35 * 3 * ysquaresize);
+      glEnd();
+
+      glBegin(GL_QUADS);
+      glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
+                 y0board - 0.75 + 1.35 * 3 * ysquaresize);
+      glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
+                 y0board - 0.75 + 1.35 * 3 * ysquaresize);
+      glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
+                 y0board - 0.75 + 1.35 * 2.7 * ysquaresize);
+      glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
+                 y0board - 0.75 + 1.35 * 2.7 * ysquaresize);
+      glEnd();
+
+      glBegin(GL_QUADS);
+      glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
+                 y0board - 0.75 - 1.35 * 3 * ysquaresize);
+      glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
+                 y0board - 0.75 - 1.35 * 3 * ysquaresize);
+      glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
+                 y0board - 0.75 - 1.35 * 2.7 * ysquaresize);
+      glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
+                 y0board - 0.75 - 1.35 * 2.7 * ysquaresize);
+      glEnd();
+      */
+  }
 
   glFlush();
 }
@@ -721,16 +873,16 @@ int main(int argc, char** argv) {
   cin >> width;
 
   if (shape == 1) {
-    xsquaresize = (2 - 2 * xborder) / (width)*SCREEN_HEIGHT / SCREEN_WIDTH;
+    xsquaresize = (2 - 2 * xborder) / (width)*aspect_ratio;
     ysquaresize = (2 - 2 * yborder) / width;
   }
   if (shape == 2) {
-    xsquaresize = (2 - 2 * xborder) / (width)*SCREEN_HEIGHT / SCREEN_WIDTH;
+    xsquaresize = (2 - 2 * xborder) / (width)*aspect_ratio;
     ysquaresize = (2 - 2 * yborder) / (width);
   }
 
   if (shape == 3) {
-    xsquaresize = (2 - 2 * xborder) / (width)*SCREEN_HEIGHT / SCREEN_WIDTH;
+    xsquaresize = (2 - 2 * xborder) / (width)*aspect_ratio;
     ysquaresize = (2 - 2 * yborder) / (width);
   }
 
