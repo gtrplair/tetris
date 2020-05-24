@@ -263,7 +263,7 @@ void board_size(int shape, int width) {
   y1 = 1 - yborder;
 
   switch (shape) {
-    case 1: {
+    case 0: {
       // Triangle
 
       for (row = 1; row <= width; row++) {
@@ -294,7 +294,7 @@ void board_size(int shape, int width) {
       break;
     }
 
-    case 2: {
+    case 1: {
       // Diamond
 
       for (row = 1; row <= width; row++) {
@@ -349,7 +349,7 @@ void board_size(int shape, int width) {
       break;
     }
 
-    case 3: {
+    case 2: {
       int n = 2 * width + 1;
 
       int i, j, x, y;
@@ -425,13 +425,19 @@ void ProcessNormalKeys(unsigned char key, int x, int y) {
   if (key == 'v') {
     validate_size *= -1;
     transition *= -1;
-    show_menu *= -1;
+   // show_menu *= -1;
   }
   /*
   if (key == 's') {
     shape_select *= -1;
   }
   */
+
+ if (key == 'b') {
+   validate_size *= -1;
+   transition *= -1;
+   show_menu *= -1;   
+ }
   glutPostRedisplay();
 }
 
@@ -824,6 +830,13 @@ void display() {
   glVertex2f(-1, -1);
   glEnd();
 
+  if (width < 21){
+    width = 37;
+  }
+    if (width > 37){
+    width = 21;
+  }
+
   if (show_menu == 1) {
     choose_board();
     highlight_board();
@@ -1022,6 +1035,7 @@ int main(int argc, char** argv) {
   int i;
   current_b = (bloc*)malloc(sizeof(*current_b));
 
+  shape = 1;
   width = 21;
 
   if (shape == 1) {

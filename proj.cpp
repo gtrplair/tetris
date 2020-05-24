@@ -72,7 +72,7 @@ void init_color_tabl() {
 
 void color_table() {
   int i = 0;
-  int color_table[64][3];
+  int color_table[71][3];
 
   color_table[i][0] = 100;
   color_table[i][1] = 100;
