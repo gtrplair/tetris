@@ -20,13 +20,13 @@ float deplacex, deplacey, xx, yy;
 float xmove_unit;
 float ymove_unit;
 
-int shape;
-int width;
+int shape = 1;
+int width = 21;
 int welcome = 1;
 int show_menu = -1;
 int transition = -1;
 int validate_size = -1;
-int shape_select = -1;
+int shape_select = 1;
 int playing_game = -1;
 
 float triangle_radius = 0.3;
@@ -506,20 +506,25 @@ void ProcessNormalKeys(unsigned char key, int x, int y) {
     } else
 
         if (validate_size == 1) {
-      cout << "AZE" << endl;
-
-      /*
-      shape = shape_select;
-      create_board(shape, width);
-      cout << "AZER" << endl;
-        init_color_tabl();
-  color_table();
-*/
-
       playing_game *= -1;
       validate_size *= -1;
+      cout << "shape_select" << shape_select << endl;;
+      cout << "shape" << shape << endl;
+      shape = shape_select + 1;
+      create_board(shape, width);
+      cout << shape_select << endl;
+      init_color_tabl();
+      color_table();
 
     } else if (playing_game == 1) {
+      /*
+  shape = shape_select;
+        cout << "AZE" << endl;
+  create_board(shape, width);
+  cout << "AZER" << endl;
+    init_color_tabl();
+color_table();
+*/
       if (g->choosing == 0) {
         cout << "111" << endl;
         placement_bloc(current_b);
@@ -595,9 +600,12 @@ void keyboardown(int key, int x, int y) {
       if (show_menu == 1 && playing_game != 1) {
         shape_select -= 1;
       }
-      if (g->choosing == 0) {
-        if (can_left(current_b, g) == 1) {
-          left(current_b);
+
+      else if (playing_game == 1) {
+        if (g->choosing == 0) {
+          if (can_left(current_b, g) == 1) {
+            left(current_b);
+          }
         }
       }
       break;
@@ -627,7 +635,7 @@ void keyboardown(int key, int x, int y) {
       break;
 
     case GLUT_KEY_END:
-            if (validate_size == 1) {
+      if (validate_size == 1) {
         width += 2;
       }
       if (show_menu == 1 && playing_game != 1) {
@@ -1138,15 +1146,16 @@ int main(int argc, char** argv) {
   int i;
   current_b = (bloc*)malloc(sizeof(*current_b));
 
-  shape_select = 1;
-  width = 21;
+  /*
+
+    shape = shape_select;
+    create_board(shape, width);
+    cout << "AZER" << endl;
+    init_color_tabl();
+    color_table();
 
 
-  shape = shape_select;
-  create_board(shape, width);
-  cout << "AZER" << endl;
-  init_color_tabl();
-  color_table();
+  */
 
   /*
 create_board(3);
