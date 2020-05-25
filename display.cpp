@@ -26,7 +26,7 @@ int welcome = 1;
 int show_menu = -1;
 int transition = -1;
 int validate_size = -1;
-int shape_select = 1;
+int shape_select = -1;
 
 float triangle_radius = 0.3;
 float losange_radius = 0.3;
@@ -240,6 +240,11 @@ void choose_board() {
 }
 
 void transition_board(int shape_select) {
+
+  if (triangle_radius >= 0.8 || losange_radius >= 0.8 || circle_radius >= 0.85){
+    transition *= -1;
+    validate_size *= -1;
+  }
   switch (shape_select) {
     case 0:
       if (triangle_radius < 0.8) {
@@ -271,7 +276,7 @@ void transition_board(int shape_select) {
       }
       break;
     case 2:
-      if (circle_radius < 0.8) {
+      if (circle_radius < 0.85) {
         circle_radius += (0.8 - 0.3) / 300;
       }
       if (circle_center > (x0board + 0.8 * aspect_ratio)) {
@@ -343,9 +348,6 @@ void board_size(int shape, int width) {
   int row, c;
 
   float x1, x2, y1, y2;
-  width /= 2;
-  width += 1;
-
 
   if (shape == 1) {
     xsquaresize = (2 - 2 * xborder) / (width)*aspect_ratio;
@@ -360,6 +362,10 @@ void board_size(int shape, int width) {
     xsquaresize = (2 - 2 * xborder) / (width)*aspect_ratio;
     ysquaresize = (2 - 2 * yborder) / (width);
   }
+
+  width /= 2;
+  width += 1;
+
   x1 = -1 + xborder;
   y1 = 1 - yborder;
 
@@ -486,7 +492,7 @@ void board_size(int shape, int width) {
       break;
     }
     default:
-      cout << "Goodbye";
+      cout << "Goodbye" << shape << endl;
   }
 }
 
@@ -495,7 +501,24 @@ void ProcessNormalKeys(unsigned char key, int x, int y) {
 
   if (key == ' ') {
     cout << "SPACEBAR" << endl;
-    if (g->choosing == 0) {
+
+    if (welcome == 1) {
+      welcome *= -1;
+      show_menu *= -1;
+    } else
+
+        if (show_menu == 1) {
+      show_menu *= -1;
+      transition *= -1;
+    //  validate_size *= -1;
+    } else
+
+        if (validate_size == 1) {
+      transition *= -1;
+      //    validate_size *= -1;
+    } else
+
+        if (g->choosing == 0) {
       cout << "111" << endl;
       placement_bloc(current_b);
       g->choosing = (g->choosing + 1) % 2;
@@ -537,9 +560,7 @@ void ProcessNormalKeys(unsigned char key, int x, int y) {
   */
 
   if (key == 'b') {
-    validate_size *= -1;
     transition *= -1;
-    show_menu *= -1;
   }
   if (key == 'p') {
     width += 2;
@@ -926,7 +947,7 @@ void affich_board(game* g, float scaling, float x, float y) {
   }
 }
 
-void display() {
+void black() {
   // background
   glColor3f(0, 0, 0);
   glBegin(GL_QUADS);
@@ -935,9 +956,12 @@ void display() {
   glVertex2f(1, -1);
   glVertex2f(-1, -1);
   glEnd();
+}
 
-  DisplayMenu();
-
+void display() {
+  black();
+  cout << width << endl;
+  cout << shape_select << endl;
   if (width < 21) {
     width = 37;
   }
@@ -952,8 +976,13 @@ void display() {
     choose_board();
     highlight_board();
   } else if (transition == 1) {
+    choose_board();
+    highlight_board();
     transition_board(shape_select);
   } else if (validate_size == 1) {
+    choose_board();
+    cout << shape_select << "HHHHHHHHHHHHHHHHHHHHH" << endl;
+    cout << width << "JJJJJJJJJJJJJJJJJJJJJ" << endl;
     board_size(shape_select, width);
   }
 
@@ -1148,21 +1177,21 @@ int main(int argc, char** argv) {
 
   shape = 1;
   width = 21;
-/*
-  if (shape == 1) {
-    xsquaresize = (2 - 2 * xborder) / (width)*aspect_ratio;
-    ysquaresize = (2 - 2 * yborder) / width;
-  }
-  if (shape == 2) {
-    xsquaresize = (2 - 2 * xborder) / (width)*aspect_ratio;
-    ysquaresize = (2 - 2 * yborder) / (width);
-  }
+  /*
+    if (shape == 1) {
+      xsquaresize = (2 - 2 * xborder) / (width)*aspect_ratio;
+      ysquaresize = (2 - 2 * yborder) / width;
+    }
+    if (shape == 2) {
+      xsquaresize = (2 - 2 * xborder) / (width)*aspect_ratio;
+      ysquaresize = (2 - 2 * yborder) / (width);
+    }
 
-  if (shape == 3) {
-    xsquaresize = (2 - 2 * xborder) / (width)*aspect_ratio;
-    ysquaresize = (2 - 2 * yborder) / (width);
-  }
-*/
+    if (shape == 3) {
+      xsquaresize = (2 - 2 * xborder) / (width)*aspect_ratio;
+      ysquaresize = (2 - 2 * yborder) / (width);
+    }
+  */
   cout << "AZE" << endl;
   create_board(shape, width);
   cout << "AZER" << endl;
