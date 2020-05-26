@@ -9,6 +9,12 @@
 
 using namespace std;
 
+struct value_sb{
+  int slide_value;
+  int indice_color;
+};
+typedef struct value_sb value_sb;
+
 struct rgb {
   double r;
   double g;
@@ -29,7 +35,7 @@ typedef struct bloc bloc;
 
 struct game {
   int** board;
-  int** slide_board;
+  value_sb** slide_board;
   int haut;
   int larg;
   int score;
@@ -39,6 +45,8 @@ struct game {
   int nb_bloc;
   int* indices;
   int choosing;
+  int anim_slide;
+  float slide;
 };
 typedef struct game game;
 
@@ -495,6 +503,36 @@ void placement_bloc(bloc* b) {
   }
 }
 
+void valeur_row_slideboard(int row){
+
+  int i;
+  
+  for(i=0 ; i<g->larg ; i++){
+    if(g->slide_board[row][i].slide_value == 3){
+      g->slide_board[row][i].slide_value = 2;
+    }
+  }
+}
+
+void init_slide_val(int col){
+  
+  int add = 0;
+  int j;
+
+  for(j=g->haut-1 ; j>=0 ; j--){
+    if(g->slide_board[j][col].slide_value==2){
+      ++add;
+    }
+    else if(g->board[j][col]>1){
+      g->slide_board[j][col].slide_value += add;
+      if(g->slide_board[j][col].slide_value>3){
+        g->slide_board[j][col].indice_color = g->board[j][col]-2;
+        g->board[j][col]=1;
+      }
+    }
+  }
+}
+
 int row_is_full(int l) {
   int i = 0;
   while (!(g->board[l][i])) {
@@ -522,6 +560,17 @@ int column_full(int c) {
   }
   return 1;
 }
+
+void set_slide_board(){
+
+  int i;
+
+  for(i=0 ; i<g->larg ; i++){
+    cout << "GRIS" << i << endl;
+    init_slide_val(i);
+  }
+}
+
 
 void delete_col(int c) {
   int i;
@@ -1542,11 +1591,10 @@ void alloc_board(int m, int n) {
   g->score = 0;
   g->choosing = 1;
   g->board = (int**)malloc(m * sizeof(*(g->board)));
-  g->slide_board = (int**)malloc(m * sizeof(*(g->board)));
-
+  g->slide_board = (value_sb**)malloc(m * sizeof(*(g->slide_board)));
   for (i = 0; i < m; i++) {
     g->board[i] = (int*)malloc(n * sizeof(int));
-    g->slide_board[i] = (int*)malloc(n * sizeof(int));
+    g->slide_board[i] = (value_sb*)malloc(n * sizeof(value_sb));
   }
 }
 
@@ -1556,7 +1604,7 @@ void init_board(int val) {
   for (j = 0; j < g->haut; j++) {
     for (i = 0; i < g->larg; i++) {
       g->board[j][i] = val;
-      g->slide_board[j][i] = val;
+      g->slide_board[j][i].slide_value = val;
     }
   }
 }
@@ -1792,7 +1840,7 @@ void create_board(int type, int width) {
       for (j = 0; j < width / 2 + 1; j++) {
         for (i = width / 2 - j; i <= width / 2 + j; i++) {
           g->board[j][i] = 1;
-          g->slide_board[j][i] = 1;
+          g->slide_board[j][i].slide_value = 3;
         }
       }
       break;
@@ -1828,13 +1876,13 @@ void create_board(int type, int width) {
       for (j = 0; j < width / 2 + 1; j++) {
         for (i = width / 2 - j; i <= width / 2 + j; i++) {
           g->board[j][i] = 1;
-          g->slide_board[j][i] = 1;
+          g->slide_board[j][i].slide_value = 1;
         }
       }
       for (j = width - 1, a = 0; j > width / 2; j--, a++) {
         for (i = width / 2 - a; i <= width / 2 + a; i++) {
           g->board[j][i] = 1;
-          g->slide_board[j][i] = 1;
+          g->slide_board[j][i].slide_value = 3;
         }
       }
       break;
@@ -1857,7 +1905,7 @@ void create_board(int type, int width) {
 
           if (x * x + y * y <= width * width + 1) {
             g->board[i][j] = 1;
-            // g->slide_board[i+width][j+width] = 1;
+            g->slide_board[i][j].slide_value = 3;
           }
         }
       }
@@ -1940,8 +1988,8 @@ void clear_slide_board() {
 
   for (i = 0; i < g->haut; i++) {
     for (j = 0; j < g->larg; j++) {
-      if (g->slide_board[i][j] > 1) {
-        g->slide_board[i][j] = 1;
+      if (g->slide_board[i][j].slide_value > 1) {
+        g->slide_board[i][j].slide_value = 1;
       }
     }
   }

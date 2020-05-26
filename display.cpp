@@ -23,6 +23,8 @@ float ymove_unit;
 int shape = 1;
 int width = 21;
 int welcome = 1;
+int politique;
+int choose_politique = -1;
 int show_menu = -1;
 int transition = -1;
 int validate_size = -1;
@@ -194,6 +196,59 @@ void DisplayMenu(void) {
   }
 }
 
+
+
+void show_politique(void) {
+  int n;
+
+  char ligne1[] = "CHOOSE YOUR PLAY STYLE";
+  char ligne2[] = "Press 1 to have access to all pieces available";
+  char ligne3[] = "Press 2 to have access to only 3 random pieces at a time";
+ 
+  glBegin(GL_POLYGON);
+  glColor3f(0.0, 0.0, 0.0);
+  glVertex2f(-1.0, -0.9);
+  glVertex2f(-1.0, 0.9);
+  glVertex2f(1.0, 0.9);
+  glVertex2f(1.0, -0.9);
+  glEnd();
+
+  glColor3f(1.0, 1.0, 1.0);
+
+  glBegin(GL_POLYGON);
+  glVertex2f(1.0, 1.0);
+  glVertex2f(-1.0, 1.0);
+  glVertex2f(-1.0, 0.9);
+  glVertex2f(1.0, 0.9);
+  glEnd();
+
+  glBegin(GL_POLYGON);
+  glVertex2f(1.0, -0.9);
+  glVertex2f(-1.0, -0.9);
+  glVertex2f(-1.0, -1.0);
+  glVertex2f(1.0, -1.0);
+  glEnd();
+
+  // text
+  glRasterPos2f(-0.8, 0.39);
+  for (n = 0; n < 22; n++) {
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne1[n]);
+  }
+
+  glRasterPos2f(-0.8, 0.19);
+  for (n = 0; n < 56; n++) {
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne2[n]);
+  }
+
+  glRasterPos2f(-0.8, -0.14);
+  for (n = 0; n < 66; n++) {
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne3[n]);
+  }
+}
+
+
+
+
 void init() {
   // set clear color to black
   glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -239,6 +294,7 @@ void choose_board() {
   }
   glEnd();
 }
+
 
 void transition_board(int shape_select) {
   if (triangle_radius >= 0.8 || losange_radius >= 0.8 ||
@@ -488,27 +544,171 @@ void board_size(int shape, int width) {
   }
 }
 
+void display_one_bloc(int indice_color, float scaling, float x, float y) {
+  float red = g->color_tabl[indice_color].r;
+  float green = g->color_tabl[indice_color].g;
+  float blue = g->color_tabl[indice_color].b;
+
+  glColor3f(red, green, blue);
+
+  /*
+
+        glColor3f(r, g, blue);
+        glBegin(GL_QUADS);
+        glVertex2f(x + j * xsquaresize * scaling,
+                   y - i * ysquaresize * scaling);
+        glVertex2f(x + (j + 1) * xsquaresize * scaling,
+                   y - i * ysquaresize * scaling);
+        glVertex2f(x + (j + 1) * xsquaresize * scaling,
+                   y - (i + 1) * ysquaresize * scaling);
+        glVertex2f(x + (j)*xsquaresize * scaling,
+                   y - (i + 1) * ysquaresize * scaling);
+        glEnd();
+
+        */
+
+  glBegin(GL_QUADS);
+  glVertex2f(x + (xbezel)*xsquaresize * scaling,
+             y - (ybezel)*ysquaresize * scaling);
+  glVertex2f(x + (1 - xbezel) * xsquaresize * scaling,
+             y - (ybezel)*ysquaresize * scaling);
+  glVertex2f(x + (1 - xbezel) * xsquaresize * scaling,
+             y - (1 - ybezel) * ysquaresize * scaling);
+  glVertex2f(x + (xbezel)*xsquaresize * scaling,
+             y - (1 - ybezel) * ysquaresize * scaling);
+  glEnd();
+
+  /////////////////////////////////////////////////////
+
+  glColor3f(red + 0.4 * (1 - red), green + 0.4 * (1 - red),
+            blue + 0.4 * (1 - red));
+  glBegin(GL_QUADS);
+  glVertex2f(x, y);
+  glVertex2f(x + (xbezel)*xsquaresize * scaling,
+             y - (ybezel)*ysquaresize * scaling);
+  glVertex2f(x + (xbezel)*xsquaresize * scaling,
+             y - (1 - ybezel) * ysquaresize * scaling);
+  glVertex2f(x, y - ysquaresize * scaling);
+  glEnd();
+
+  glColor3f(red + 0.7 * (1 - red), green + 0.7 * (1 - red),
+            blue + 0.7 * (1 - red));
+  glBegin(GL_QUADS);
+  glVertex2f(x, y);
+  glVertex2f(x + xsquaresize * scaling, y);
+  glVertex2f(x + (1 - xbezel) * xsquaresize * scaling,
+             y - (ybezel)*ysquaresize * scaling);
+  glVertex2f(x + (xbezel)*xsquaresize * scaling,
+             y - (ybezel)*ysquaresize * scaling);
+  glEnd();
+
+  glColor3f(0.7 * red, 0.7 * green, 0.7 * blue);
+  glBegin(GL_QUADS);
+  glVertex2f(x + (1 - xbezel) * xsquaresize * scaling,
+             y - ybezel * ysquaresize * scaling);
+  glVertex2f(x + xsquaresize * scaling, y);
+  glVertex2f(x + xsquaresize * scaling, y - ysquaresize * scaling);
+  glVertex2f(x + (1 - xbezel) * xsquaresize * scaling,
+             y - (1 - ybezel) * ysquaresize * scaling);
+  glEnd();
+
+  glColor3f(0.4 * red, 0.4 * green, 0.4 * blue);
+  glBegin(GL_QUADS);
+  glVertex2f(x, y - ysquaresize * scaling);
+  glVertex2f(x + (xbezel)*xsquaresize * scaling,
+             y - (1 - ybezel) * ysquaresize * scaling);
+  glVertex2f(x + (1 - xbezel) * xsquaresize * scaling,
+             y - (1 - ybezel) * ysquaresize * scaling);
+  glVertex2f(x + xsquaresize * scaling, y - ysquaresize * scaling);
+  glEnd();
+}
+
+int actualisation_slideboard(){
+
+  int i, j;
+  int again = 0;
+  cout << "ACTUAL SLIDEB" << endl;
+
+  for(i=0 ; i<g->larg ; i++){
+    for(j=g->haut-1 ; j>=0 ; j--){
+      if(g->slide_board[j][i].slide_value>4){
+        g->slide_board[j+1][i].slide_value = g->slide_board[j][i].slide_value-1;
+        g->slide_board[j+1][i].indice_color = g->slide_board[j][i].indice_color;
+        g->slide_board[j][i].slide_value = 3;
+        again = 1;
+      }
+      else if(g->slide_board[j][i].slide_value>3){
+        g->slide_board[j+1][i].slide_value = g->slide_board[j][i].slide_value-1;
+        g->slide_board[j][i].slide_value = 3;
+        g->board[j+1][i] = g->slide_board[j][i].indice_color+2;
+        
+      }
+    }
+  }
+  return again;
+}
+
+void slide(){
+  
+  int nbslide;
+  int i, j;
+
+  cout << "MAGIQUE" << endl;
+
+  for(j=0 ; j<g->haut ; j++){
+    for(i=0 ; i<g->larg ; i++){
+      if(g->slide_board[j][i].slide_value>3){
+        display_one_bloc(g->slide_board[j][i].indice_color, 1, x0board + i * xsquaresize,
+                     y0board - j * ysquaresize - g->slide);
+      }
+    }
+  }
+  g->slide += 0.001;
+  if(g->slide>=ysquaresize){
+    g->slide = 0;
+    if(actualisation_slideboard()==0){
+      cout << "STOPSsLIDE" << endl;
+      g->anim_slide = 0;
+    }
+  }
+  cout << "BLABLA" << endl;
+}
+
+void print_slide_b(){
+
+  int i, j;
+  for(j=0 ; j<g->haut ; j++){
+    for(i=0 ; i<g->larg ; i++){
+      cout << g->slide_board[j][i].slide_value << " " ;
+    }
+    cout << endl ;
+  }
+}
+
 void ProcessNormalKeys(unsigned char key, int x, int y) {
   int i;
+  int start_anim = 0;
 
   if (key == ' ') {
     cout << "SPACEBAR" << endl;
 
     if (welcome == 1) {
       welcome *= -1;
-      show_menu *= -1;
-    } else
+      choose_politique *= -1;
+    }
 
-        if (show_menu == 1) {
+    else if (choose_politique == 1) {
+      choose_politique *= -1;
+      show_menu *= -1;
+    } else if (show_menu == 1) {
       show_menu *= -1;
       transition *= -1;
       //  validate_size *= -1;
-    } else
-
-        if (validate_size == 1) {
+    } else if (validate_size == 1) {
       playing_game *= -1;
       validate_size *= -1;
-      cout << "shape_select" << shape_select << endl;;
+      cout << "shape_select" << shape_select << endl;
+      ;
       cout << "shape" << shape << endl;
       shape = shape_select + 1;
       create_board(shape, width);
@@ -537,9 +737,24 @@ color_table();
 
         for (i = 0; i < g->haut; i++) {
           if (row_is_full(i)) {
+            valeur_row_slideboard(i);
             delete_row(i);
+            start_anim = 1;
           }
         }
+        if(start_anim==1){
+        set_slide_board();
+        print_slide_b();
+        g->anim_slide=1;
+        start_anim=0;
+      }
+      /*
+      for (i = 0; i < g->larg; i++) {
+        if (column_full(i)) {
+          delete_col(i);
+        }
+      }
+      */
       } else {
         cout << "222" << endl;
         free(current_b);
@@ -839,23 +1054,6 @@ void dis(game* g,
   }
 }
 
-/*
-
-
-
-
-
-
-
-}
-
-
-
-
-
-
-*/
-
 void animate(int value) {
   glutTimerFunc(speed, animate, 0);
   time1++;
@@ -866,84 +1064,6 @@ void animate(int value) {
   glutPostRedisplay();
 }
 
-void display_one_bloc(int indice_color, float scaling, float x, float y) {
-  float red = g->color_tabl[indice_color].r;
-  float green = g->color_tabl[indice_color].g;
-  float blue = g->color_tabl[indice_color].b;
-
-  glColor3f(red, green, blue);
-
-  /*
-
-        glColor3f(r, g, blue);
-        glBegin(GL_QUADS);
-        glVertex2f(x + j * xsquaresize * scaling,
-                   y - i * ysquaresize * scaling);
-        glVertex2f(x + (j + 1) * xsquaresize * scaling,
-                   y - i * ysquaresize * scaling);
-        glVertex2f(x + (j + 1) * xsquaresize * scaling,
-                   y - (i + 1) * ysquaresize * scaling);
-        glVertex2f(x + (j)*xsquaresize * scaling,
-                   y - (i + 1) * ysquaresize * scaling);
-        glEnd();
-
-        */
-
-  glBegin(GL_QUADS);
-  glVertex2f(x + (xbezel)*xsquaresize * scaling,
-             y - (ybezel)*ysquaresize * scaling);
-  glVertex2f(x + (1 - xbezel) * xsquaresize * scaling,
-             y - (ybezel)*ysquaresize * scaling);
-  glVertex2f(x + (1 - xbezel) * xsquaresize * scaling,
-             y - (1 - ybezel) * ysquaresize * scaling);
-  glVertex2f(x + (xbezel)*xsquaresize * scaling,
-             y - (1 - ybezel) * ysquaresize * scaling);
-  glEnd();
-
-  /////////////////////////////////////////////////////
-
-  glColor3f(red + 0.4 * (1 - red), green + 0.4 * (1 - red),
-            blue + 0.4 * (1 - red));
-  glBegin(GL_QUADS);
-  glVertex2f(x, y);
-  glVertex2f(x + (xbezel)*xsquaresize * scaling,
-             y - (ybezel)*ysquaresize * scaling);
-  glVertex2f(x + (xbezel)*xsquaresize * scaling,
-             y - (1 - ybezel) * ysquaresize * scaling);
-  glVertex2f(x, y - ysquaresize * scaling);
-  glEnd();
-
-  glColor3f(red + 0.7 * (1 - red), green + 0.7 * (1 - red),
-            blue + 0.7 * (1 - red));
-  glBegin(GL_QUADS);
-  glVertex2f(x, y);
-  glVertex2f(x + xsquaresize * scaling, y);
-  glVertex2f(x + (1 - xbezel) * xsquaresize * scaling,
-             y - (ybezel)*ysquaresize * scaling);
-  glVertex2f(x + (xbezel)*xsquaresize * scaling,
-             y - (ybezel)*ysquaresize * scaling);
-  glEnd();
-
-  glColor3f(0.7 * red, 0.7 * green, 0.7 * blue);
-  glBegin(GL_QUADS);
-  glVertex2f(x + (1 - xbezel) * xsquaresize * scaling,
-             y - ybezel * ysquaresize * scaling);
-  glVertex2f(x + xsquaresize * scaling, y);
-  glVertex2f(x + xsquaresize * scaling, y - ysquaresize * scaling);
-  glVertex2f(x + (1 - xbezel) * xsquaresize * scaling,
-             y - (1 - ybezel) * ysquaresize * scaling);
-  glEnd();
-
-  glColor3f(0.4 * red, 0.4 * green, 0.4 * blue);
-  glBegin(GL_QUADS);
-  glVertex2f(x, y - ysquaresize * scaling);
-  glVertex2f(x + (xbezel)*xsquaresize * scaling,
-             y - (1 - ybezel) * ysquaresize * scaling);
-  glVertex2f(x + (1 - xbezel) * xsquaresize * scaling,
-             y - (1 - ybezel) * ysquaresize * scaling);
-  glVertex2f(x + xsquaresize * scaling, y - ysquaresize * scaling);
-  glEnd();
-}
 
 void affich_board(game* g, float scaling, float x, float y) {
   int i, j;
@@ -1003,7 +1123,11 @@ void display() {
 
   if (welcome == 1) {
     DisplayMenu();
-  } else if (show_menu == 1) {
+  } else if (choose_politique == 1) {
+    show_politique();
+  }
+
+  else if (show_menu == 1) {
     //  width = 1;
     choose_board();
     highlight_board();
@@ -1051,6 +1175,10 @@ void display() {
                  y0board - 0.75 - 1.35 * 3 * ysquaresize);
       glEnd();
       */
+     if(g->anim_slide==1){
+      display_one_bloc(5,1,0.5,0.5);
+      slide();
+    }
 
     if (g->choosing == 0) {
       display_bloc(current_b, 1, g->color_tabl[indice_bloc].r,
