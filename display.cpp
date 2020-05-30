@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include<sstream>
+
 #include <iostream>
 
 #include "proj.cpp"
@@ -20,6 +22,7 @@ float deplacex, deplacey, xx, yy;
 float xmove_unit;
 float ymove_unit;
 
+float score = 1.0001;
 int shape = 1;
 int width = 21;
 int welcome = 1;
@@ -197,6 +200,29 @@ void DisplayMenu(void) {
   }
 }
 
+void show_score() {
+  int n;
+
+  stringstream ss;  
+  ss<<score;  
+  string s;  
+  ss>>s;  
+
+  char ligne1[] = "Score : ";
+
+  glColor3f(1.0, 1, 1);
+
+  glRasterPos2f(0.4, 0.89);
+  for (n = 0; n < 10; n++) {
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne1[n]);
+  }
+  glRasterPos2f(0.6, 0.89);
+  for (n = 2; n < 5; n++) {
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, s[n]);
+  }
+
+}
+
 void show_politique(void) {
   int n;
 
@@ -204,15 +230,15 @@ void show_politique(void) {
   char ligne2[] = "Access to all available pieces or to only 3 at a time";
   char ligne3[] = "Three";
   char ligne4[] = "All";
-/*
-  glBegin(GL_POLYGON);
-  glColor3f(0.0, 0.0, 0.0);
-  glVertex2f(-1.0, -0.9);
-  glVertex2f(-1.0, 0.9);
-  glVertex2f(1.0, 0.9);
-  glVertex2f(1.0, -0.9);
-  glEnd();
-  */
+  /*
+    glBegin(GL_POLYGON);
+    glColor3f(0.0, 0.0, 0.0);
+    glVertex2f(-1.0, -0.9);
+    glVertex2f(-1.0, 0.9);
+    glVertex2f(1.0, 0.9);
+    glVertex2f(1.0, -0.9);
+    glEnd();
+    */
 
   glColor3f(1.0, 1, 1);
 
@@ -241,7 +267,6 @@ void show_politique(void) {
     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne2[n]);
   }
 
-
   if (politique == 2) {
     glColor3f(0, 0, 0);
   } else {
@@ -252,14 +277,14 @@ void show_politique(void) {
   for (n = 0; n < 5; n++) {
     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne3[n]);
   }
-    if (politique == 2) {
+  if (politique == 2) {
     glColor3f(1, 1, 1);
     ;
   } else {
     glColor3f(0, 0, 0);
     ;
   }
-    glRasterPos2f(-0.63, -0.0);
+  glRasterPos2f(-0.63, -0.0);
   for (n = 0; n < 3; n++) {
     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne4[n]);
   }
@@ -1212,6 +1237,7 @@ void black() {
 }
 
 void display() {
+    cout << "SCORE" << score << endl;
   black();
   cout << width << endl;
   cout << shape_select << endl;
@@ -1238,7 +1264,7 @@ void display() {
   if (welcome == 1) {
     DisplayMenu();
   } else if (choose_politique == 1) {
-        politique_display();
+    politique_display();
     show_politique();
 
   }
@@ -1384,6 +1410,8 @@ void display() {
     glVertex2f(0.6, -0.42);
     glEnd();
 
+    show_score();
+
     // background();
   }
 
@@ -1393,7 +1421,6 @@ void display() {
 int main(int argc, char** argv) {
   int i;
   current_b = (bloc*)malloc(sizeof(*current_b));
-
   /*
 
     shape = shape_select;
