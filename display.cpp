@@ -41,6 +41,7 @@ float shape_scale = 1.0;
 float triangle_red = 0.3;
 float losange_red = 0.3;
 float circle_red = 0.3;
+float shape_white = 0.0;
 
 float xborder = 0.2;
 float yborder = 0.2;
@@ -196,15 +197,13 @@ void DisplayMenu(void) {
   }
 }
 
-
-
 void show_politique(void) {
   int n;
 
   char ligne1[] = "CHOOSE YOUR PLAY STYLE";
   char ligne2[] = "Press 1 to have access to all pieces available";
   char ligne3[] = "Press 2 to have access to only 3 random pieces at a time";
- 
+
   glBegin(GL_POLYGON);
   glColor3f(0.0, 0.0, 0.0);
   glVertex2f(-1.0, -0.9);
@@ -246,9 +245,6 @@ void show_politique(void) {
   }
 }
 
-
-
-
 void init() {
   // set clear color to black
   glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -258,7 +254,7 @@ void init() {
 }
 
 void choose_board() {
-  glColor3f(triangle_red, 0, 0);
+  glColor3f(triangle_red, shape_white, shape_white);
   // triangle
   glBegin(GL_POLYGON);
   glVertex2f(triangle_center - triangle_radius * aspect_ratio, 0);
@@ -266,7 +262,7 @@ void choose_board() {
   glVertex2f(triangle_center + triangle_radius * aspect_ratio, 0);
   glEnd();
 
-  glColor3f(losange_red, 0, 0);
+  glColor3f(losange_red, shape_white, shape_white);
   // diamond
   glBegin(GL_QUADS);
   glVertex2f(-losange_radius * aspect_ratio + losange_center, 0);
@@ -275,7 +271,7 @@ void choose_board() {
   glVertex2f(+losange_center, -losange_radius);
   glEnd();
 
-  glColor3f(circle_red, 0, 0);
+  glColor3f(circle_red, shape_white, shape_white);
   // circle
   int edges = 50;
 
@@ -294,17 +290,47 @@ void choose_board() {
   }
   glEnd();
 }
+/*
+void background() {
 
+
+    GLfloat centerx, centery, temp;
+  int acc = 0;;
+  int edges = 16;
+  glBegin(GL_POLYGON);
+  temp = 360.0 / (float)edges;
+  for (float i = 0; i < 360; i += temp) {
+    acc++;
+    if (acc%2 == 1){
+  glColor3f(0, 0.5, 0);
+    }else{
+        glColor3f(0, 1, 0);
+    }
+    centerx =
+        (circle_radius+2.5) * cos(i * M_PI / 180.0f) * aspect_ratio + (x0board +
+0.8 * aspect_ratio); centery = (circle_radius+2.5) * sin(i * M_PI / 180.0f);
+
+    glVertex2f(centerx, centery);
+    centerx = 0;
+    centery = 0;
+  }
+  glEnd();
+}
+*/
 
 void transition_board(int shape_select) {
   if (triangle_radius >= 0.8 || losange_radius >= 0.8 ||
-      circle_radius >= 0.85) {
+      circle_radius >= 0.80) {
     transition *= -1;
     validate_size *= -1;
   }
+  if (triangle_radius < 0.8 || losange_radius < 0.8 ||
+      circle_radius < 0.85 && shape_white < 1.0) {
+    shape_white += 0.006;
+  }
   switch (shape_select) {
     case 0:
-      if (triangle_radius < 0.85) {
+      if (triangle_radius < 0.80) {
         triangle_radius += 0.002;
       }
       if (triangle_center < (x0board + 0.8 * aspect_ratio)) {
@@ -318,12 +344,12 @@ void transition_board(int shape_select) {
       }
       break;
     case 1:
-      if (losange_radius < 0.85) {
+      if (losange_radius < 0.80) {
         losange_radius += 0.002;
       }
       cout << losange_center << "EEEEEEEEEEEEEEEEEEEEEEEEEEEE" << endl;
       if (losange_center > -0.24) {
-        losange_center -= 0.001;
+        losange_center -= 0.0012;
       }
       if (circle_radius > 0) {
         circle_radius -= 0.002;
@@ -333,7 +359,7 @@ void transition_board(int shape_select) {
       }
       break;
     case 2:
-      if (circle_radius < 0.85) {
+      if (circle_radius < 0.80) {
         circle_radius += (0.8 - 0.3) / 300;
       }
       if (circle_center > (x0board + 0.8 * aspect_ratio)) {
@@ -623,50 +649,50 @@ void display_one_bloc(int indice_color, float scaling, float x, float y) {
   glEnd();
 }
 
-int actualisation_slideboard(){
-
+int actualisation_slideboard() {
   int i, j;
   int again = 0;
   cout << "ACTUAL SLIDEB" << endl;
 
-  for(i=0 ; i<g->larg ; i++){
-    for(j=g->haut-1 ; j>=0 ; j--){
-      if(g->slide_board[j][i].slide_value>4){
-        g->slide_board[j+1][i].slide_value = g->slide_board[j][i].slide_value-1;
-        g->slide_board[j+1][i].indice_color = g->slide_board[j][i].indice_color;
+  for (i = 0; i < g->larg; i++) {
+    for (j = g->haut - 1; j >= 0; j--) {
+      if (g->slide_board[j][i].slide_value > 4) {
+        g->slide_board[j + 1][i].slide_value =
+            g->slide_board[j][i].slide_value - 1;
+        g->slide_board[j + 1][i].indice_color =
+            g->slide_board[j][i].indice_color;
         g->slide_board[j][i].slide_value = 3;
         again = 1;
-      }
-      else if(g->slide_board[j][i].slide_value>3){
-        g->slide_board[j+1][i].slide_value = g->slide_board[j][i].slide_value-1;
+      } else if (g->slide_board[j][i].slide_value > 3) {
+        g->slide_board[j + 1][i].slide_value =
+            g->slide_board[j][i].slide_value - 1;
         g->slide_board[j][i].slide_value = 3;
-        g->board[j+1][i] = g->slide_board[j][i].indice_color+2;
-        
+        g->board[j + 1][i] = g->slide_board[j][i].indice_color + 2;
       }
     }
   }
   return again;
 }
 
-void slide(){
-  
+void slide() {
   int nbslide;
   int i, j;
 
   cout << "MAGIQUE" << endl;
 
-  for(j=0 ; j<g->haut ; j++){
-    for(i=0 ; i<g->larg ; i++){
-      if(g->slide_board[j][i].slide_value>3){
-        display_one_bloc(g->slide_board[j][i].indice_color, 1, x0board + i * xsquaresize,
-                     y0board - j * ysquaresize - g->slide);
+  for (j = 0; j < g->haut; j++) {
+    for (i = 0; i < g->larg; i++) {
+      if (g->slide_board[j][i].slide_value > 3) {
+        display_one_bloc(g->slide_board[j][i].indice_color, 1,
+                         x0board + i * xsquaresize,
+                         y0board - j * ysquaresize - g->slide);
       }
     }
   }
   g->slide += 0.001;
-  if(g->slide>=ysquaresize){
+  if (g->slide >= ysquaresize) {
     g->slide = 0;
-    if(actualisation_slideboard()==0){
+    if (actualisation_slideboard() == 0) {
       cout << "STOPSsLIDE" << endl;
       g->anim_slide = 0;
     }
@@ -674,14 +700,13 @@ void slide(){
   cout << "BLABLA" << endl;
 }
 
-void print_slide_b(){
-
+void print_slide_b() {
   int i, j;
-  for(j=0 ; j<g->haut ; j++){
-    for(i=0 ; i<g->larg ; i++){
-      cout << g->slide_board[j][i].slide_value << " " ;
+  for (j = 0; j < g->haut; j++) {
+    for (i = 0; i < g->larg; i++) {
+      cout << g->slide_board[j][i].slide_value << " ";
     }
-    cout << endl ;
+    cout << endl;
   }
 }
 
@@ -697,10 +722,12 @@ void ProcessNormalKeys(unsigned char key, int x, int y) {
       choose_politique *= -1;
     }
 
-    else if (choose_politique == 1) {
+   else if (choose_politique == 1) {
       choose_politique *= -1;
       show_menu *= -1;
-    } else if (show_menu == 1) {
+    }  
+    
+    else if (show_menu == 1) {
       show_menu *= -1;
       transition *= -1;
       //  validate_size *= -1;
@@ -742,19 +769,19 @@ color_table();
             start_anim = 1;
           }
         }
-        if(start_anim==1){
-        set_slide_board();
-        print_slide_b();
-        g->anim_slide=1;
-        start_anim=0;
-      }
-      /*
-      for (i = 0; i < g->larg; i++) {
-        if (column_full(i)) {
-          delete_col(i);
+        if (start_anim == 1) {
+          set_slide_board();
+          print_slide_b();
+          g->anim_slide = 1;
+          start_anim = 0;
         }
-      }
-      */
+        /*
+        for (i = 0; i < g->larg; i++) {
+          if (column_full(i)) {
+            delete_col(i);
+          }
+        }
+        */
       } else {
         cout << "222" << endl;
         free(current_b);
@@ -787,6 +814,22 @@ color_table();
     if (key == 'p') {
       width += 2;
     }
+    /*
+    if (key == '1') {
+      if (choose_politique == 1) {
+        choose_politique *= -1;
+        show_menu *= -1;
+        politique = 1;
+      }
+    }
+        if (key == '2') {
+      if (choose_politique == 1) {
+        choose_politique *= -1;
+        show_menu *= -1;
+        politique = 2;
+      }
+    }
+    */
   }
   glutPostRedisplay();
 }
@@ -826,26 +869,30 @@ void keyboardown(int key, int x, int y) {
       break;
 
     case GLUT_KEY_UP:
-      if (g->choosing == 0) {
-        if (can_top(current_b, g) == 1) {
-          top(current_b);
+      if (playing_game == 1) {
+        if (g->choosing == 0) {
+          if (can_top(current_b, g) == 1) {
+            top(current_b);
+          }
+        } else {
+          counter = 0;
+          select_counter = 1;
+          // indice_bloc = (indice_bloc - 1 + g->nb_bloc) % g->nb_bloc;
         }
-      } else {
-        counter = 0;
-        select_counter = 1;
-        // indice_bloc = (indice_bloc - 1 + g->nb_bloc) % g->nb_bloc;
       }
       break;
 
     case GLUT_KEY_DOWN:
-      if (g->choosing == 0) {
-        if (can_bot(current_b, g) == 1) {
-          bot(current_b);
+      if (playing_game == 1) {
+        if (g->choosing == 0) {
+          if (can_bot(current_b, g) == 1) {
+            bot(current_b);
+          }
+        } else {
+          counter = 0;
+          select_counter = -1;
+          // indice_bloc = (indice_bloc + 1) % g->nb_bloc;
         }
-      } else {
-        counter = 0;
-        select_counter = -1;
-        // indice_bloc = (indice_bloc + 1) % g->nb_bloc;
       }
       break;
 
@@ -1064,7 +1111,6 @@ void animate(int value) {
   glutPostRedisplay();
 }
 
-
 void affich_board(game* g, float scaling, float x, float y) {
   int i, j;
 
@@ -1136,7 +1182,7 @@ void display() {
     highlight_board();
     transition_board(shape_select);
   } else if (validate_size == 1) {
-    choose_board();
+    // choose_board();
     board_size(shape_select, width);
   }
 
@@ -1148,35 +1194,36 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     glutSetKeyRepeat(GLUT_KEY_REPEAT_ON);
     // dis(g, 1, 1, 1, 1, x0board, y0board);
-
+    // background();
     affich_board(g, 1, x0board, y0board);
 
     // entourer la piece a selectioner
     /*
-      glBegin(GL_QUADS);
-      glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
-                 y0board - 0.75 + 1.35 * 3 * ysquaresize);
-      glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
-                 y0board - 0.75 + 1.35 * 3 * ysquaresize);
-      glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
-                 y0board - 0.75 - 1.35 * 3 * ysquaresize);
-      glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
-                 y0board - 0.75 - 1.35 * 3 * ysquaresize);
-      glEnd();
+        glBegin(GL_QUADS);
+        glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
+                   y0board - 0.75 + 1.35 * 3 * ysquaresize);
+        glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
+                   y0board - 0.75 + 1.35 * 3 * ysquaresize);
+        glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
+                   y0board - 0.75 - 1.35 * 3 * ysquaresize);
+        glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
+                   y0board - 0.75 - 1.35 * 3 * ysquaresize);
+        glEnd();
 
-      glBegin(GL_QUADS);
-      glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
-                 y0board - 0.75 + 1.35 * 3 * ysquaresize);
-      glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
-                 y0board - 0.75 + 1.35 * 3 * ysquaresize);
-      glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
-                 y0board - 0.75 - 1.35 * 3 * ysquaresize);
-      glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
-                 y0board - 0.75 - 1.35 * 3 * ysquaresize);
-      glEnd();
-      */
-     if(g->anim_slide==1){
-      display_one_bloc(5,1,0.5,0.5);
+        glBegin(GL_QUADS);
+        glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
+                   y0board - 0.75 + 1.35 * 3 * ysquaresize);
+        glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
+                   y0board - 0.75 + 1.35 * 3 * ysquaresize);
+        glVertex2f(x0board + 1.5 + 3 * xsquaresize * 1.35,
+                   y0board - 0.75 - 1.35 * 3 * ysquaresize);
+        glVertex2f(x0board + 1.5 - 3 * xsquaresize * 1.35,
+                   y0board - 0.75 - 1.35 * 3 * ysquaresize);
+        glEnd();
+        */
+
+    if (g->anim_slide == 1) {
+      display_one_bloc(5, 1, 0.5, 0.5);
       slide();
     }
 
@@ -1251,6 +1298,7 @@ void display() {
           y0board - ypos3 +
               (big_scale * ysquaresize * (g->tabl_bloc[indice_bloc]).haut / 2));
     }
+
     glColor3f(0, 0, 0);
     glBegin(GL_QUADS);
     glVertex2f(0.6, 1);
@@ -1265,6 +1313,8 @@ void display() {
     glVertex2f(1, -0.42);
     glVertex2f(0.6, -0.42);
     glEnd();
+
+    // background();
   }
 
   glFlush();
