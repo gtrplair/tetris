@@ -23,7 +23,7 @@ float ymove_unit;
 int shape = 1;
 int width = 21;
 int welcome = 1;
-int politique;
+int politique = 1;
 int choose_politique = -1;
 int show_menu = -1;
 int transition = -1;
@@ -201,9 +201,10 @@ void show_politique(void) {
   int n;
 
   char ligne1[] = "CHOOSE YOUR PLAY STYLE";
-  char ligne2[] = "Press 1 to have access to all pieces available";
-  char ligne3[] = "Press 2 to have access to only 3 random pieces at a time";
-
+  char ligne2[] = "Access to all available pieces or to only 3 at a time";
+  char ligne3[] = "Three";
+  char ligne4[] = "All";
+/*
   glBegin(GL_POLYGON);
   glColor3f(0.0, 0.0, 0.0);
   glVertex2f(-1.0, -0.9);
@@ -211,8 +212,9 @@ void show_politique(void) {
   glVertex2f(1.0, 0.9);
   glVertex2f(1.0, -0.9);
   glEnd();
+  */
 
-  glColor3f(1.0, 1.0, 1.0);
+  glColor3f(1.0, 1, 1);
 
   glBegin(GL_POLYGON);
   glVertex2f(1.0, 1.0);
@@ -229,19 +231,37 @@ void show_politique(void) {
   glEnd();
 
   // text
-  glRasterPos2f(-0.8, 0.39);
+  glRasterPos2f(-0.4, 0.69);
   for (n = 0; n < 22; n++) {
     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne1[n]);
   }
 
-  glRasterPos2f(-0.8, 0.19);
+  glRasterPos2f(-0.5, 0.49);
   for (n = 0; n < 56; n++) {
     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne2[n]);
   }
 
-  glRasterPos2f(-0.8, -0.14);
-  for (n = 0; n < 66; n++) {
+
+  if (politique == 2) {
+    glColor3f(0, 0, 0);
+  } else {
+    glColor3f(1, 1, 1);
+  }
+
+  glRasterPos2f(0.57, -0.0);
+  for (n = 0; n < 5; n++) {
     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne3[n]);
+  }
+    if (politique == 2) {
+    glColor3f(1, 1, 1);
+    ;
+  } else {
+    glColor3f(0, 0, 0);
+    ;
+  }
+    glRasterPos2f(-0.63, -0.0);
+  for (n = 0; n < 3; n++) {
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne4[n]);
   }
 }
 
@@ -251,6 +271,38 @@ void init() {
 
   // set fill color to white
   glColor3f(1.0, 1.0, 1.0);
+}
+
+void politique_display() {
+  if (politique == 1) {
+    glColor3f(1, 1, 1);
+    ;
+  } else {
+    glColor3f(0, 0, 0);
+    ;
+  }
+
+  // diamond
+  glBegin(GL_QUADS);
+  glVertex2f(-losange_radius * aspect_ratio + triangle_center, 0);
+  glVertex2f(+triangle_center, losange_radius);
+  glVertex2f(losange_radius * aspect_ratio + triangle_center, 0);
+  glVertex2f(+triangle_center, -losange_radius);
+  glEnd();
+
+  if (politique == 1) {
+    glColor3f(0, 0, 0);
+  } else {
+    glColor3f(1, 1, 1);
+  }
+
+  // diamond
+  glBegin(GL_QUADS);
+  glVertex2f(-losange_radius * aspect_ratio + circle_center, 0);
+  glVertex2f(+circle_center, losange_radius);
+  glVertex2f(losange_radius * aspect_ratio + circle_center, 0);
+  glVertex2f(+circle_center, -losange_radius);
+  glEnd();
 }
 
 void choose_board() {
@@ -722,11 +774,11 @@ void ProcessNormalKeys(unsigned char key, int x, int y) {
       choose_politique *= -1;
     }
 
-   else if (choose_politique == 1) {
+    else if (choose_politique == 1) {
       choose_politique *= -1;
       show_menu *= -1;
-    }  
-    
+    }
+
     else if (show_menu == 1) {
       show_menu *= -1;
       transition *= -1;
@@ -841,6 +893,9 @@ void keyboardown(int key, int x, int y) {
       if (validate_size == 1) {
         width += 2;
       }
+      if (choose_politique == 1) {
+        politique++;
+      }
       if (show_menu == 1 && playing_game != 1) {
         shape_select += 1;
       }
@@ -857,6 +912,9 @@ void keyboardown(int key, int x, int y) {
       }
       if (show_menu == 1 && playing_game != 1) {
         shape_select -= 1;
+      }
+      if (choose_politique == 1) {
+        politique--;
       }
 
       else if (playing_game == 1) {
@@ -899,6 +957,9 @@ void keyboardown(int key, int x, int y) {
     case GLUT_KEY_END:
       if (validate_size == 1) {
         width += 2;
+      }
+      if (choose_politique == 1) {
+        politique++;
       }
       if (show_menu == 1 && playing_game != 1) {
         shape_select += 1;
@@ -1167,10 +1228,19 @@ void display() {
     width = 21;
   }
 
+  if (politique < 1) {
+    politique = 1;
+  }
+  if (politique > 2) {
+    politique = 2;
+  }
+
   if (welcome == 1) {
     DisplayMenu();
   } else if (choose_politique == 1) {
+        politique_display();
     show_politique();
+
   }
 
   else if (show_menu == 1) {
