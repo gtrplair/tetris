@@ -3,9 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include<sstream>
-
 #include <iostream>
+#include <sstream>
 
 #include "proj.cpp"
 
@@ -22,7 +21,8 @@ float deplacex, deplacey, xx, yy;
 float xmove_unit;
 float ymove_unit;
 
-float score = 1.0001;
+
+float score = 1.00001;
 int shape = 1;
 int width = 21;
 int welcome = 1;
@@ -74,7 +74,7 @@ float small_scale1 = 0.15;
 float small_scale2 = 0.55;
 float small_scale3 = 0.55;
 float big_scale = 1.35;
-int sel_speed = 100;
+int sel_speed = 80;
 
 void select_reset() {
   ypos1 = 0.18;
@@ -118,12 +118,12 @@ void DisplayMenu(void) {
   int n;
 
   char ligne1[] = "WELCOME TO TETRIS 2099";
-  char ligne2[] = "Use the arrows and spacebar to make your choices";
+  char ligne2[] = "Use the arrows and spacebar to select your game settings";
   char ligne3[] =
-      "Choose if you want all pieces available, or just three random pieces";
+      "Choose if you want all pieces available, or just three random pieces at a time";
   char ligne4[] = "Choose the shape and size of your game";
   char ligne7[] = "Select your pieces with the arrow keys and the spacebar";
-  char ligne6[] = "Fill a column or row to make them disappear";
+  char ligne6[] = "Place the blocks with the spacebar and fill a column or row to make them disappear";
   char ligne5[] = "The game is over when you cannot play any more pieces";
   char ligne8[] = "Press spacebar to continue";
 
@@ -163,12 +163,12 @@ void DisplayMenu(void) {
 
   glColor3f(1.0, 1.0, 1.0);
   glRasterPos2f(-0.8, 0.64);
-  for (n = 0; n < 48; n++) {
+  for (n = 0; n < 57; n++) {
     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne2[n]);
   }
 
   glRasterPos2f(-0.8, 0.39);
-  for (n = 0; n < 70; n++) {
+  for (n = 0; n < 78; n++) {
     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne3[n]);
   }
 
@@ -178,7 +178,7 @@ void DisplayMenu(void) {
   }
 
   glRasterPos2f(-0.8, -0.11);
-  for (n = 0; n < 43; n++) {
+  for (n = 0; n < 83; n++) {
     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne6[n]);
   }
 
@@ -203,10 +203,10 @@ void DisplayMenu(void) {
 void show_score() {
   int n;
 
-  stringstream ss;  
-  ss<<score;  
-  string s;  
-  ss>>s;  
+  stringstream ss;
+  ss << score;
+  string s;
+  ss >> s;
 
   char ligne1[] = "Score : ";
 
@@ -217,10 +217,9 @@ void show_score() {
     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ligne1[n]);
   }
   glRasterPos2f(0.6, 0.89);
-  for (n = 2; n < 5; n++) {
+  for (n = 2; n < 6; n++) {
     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, s[n]);
   }
-
 }
 
 void show_politique(void) {
@@ -424,7 +423,6 @@ void transition_board(int shape_select) {
       if (losange_radius < 0.80) {
         losange_radius += 0.002;
       }
-      cout << losange_center << "EEEEEEEEEEEEEEEEEEEEEEEEEEEE" << endl;
       if (losange_center > -0.24) {
         losange_center -= 0.0012;
       }
@@ -551,7 +549,6 @@ void board_size(int shape, int width) {
 
         y1 -= ysquaresize;
 
-        cout << "\n";
       }
       break;
     }
@@ -582,7 +579,7 @@ void board_size(int shape, int width) {
 
         y1 -= ysquaresize;
 
-        cout << "\n";
+
       }
 
       for (row = width; row > 1; row--) {
@@ -638,7 +635,7 @@ void board_size(int shape, int width) {
           x1 = -1 + xborder;
           y1 = 1 - yborder;
         }
-        cout << "\n";
+
       }
       break;
     }
@@ -654,21 +651,7 @@ void display_one_bloc(int indice_color, float scaling, float x, float y) {
 
   glColor3f(red, green, blue);
 
-  /*
 
-        glColor3f(r, g, blue);
-        glBegin(GL_QUADS);
-        glVertex2f(x + j * xsquaresize * scaling,
-                   y - i * ysquaresize * scaling);
-        glVertex2f(x + (j + 1) * xsquaresize * scaling,
-                   y - i * ysquaresize * scaling);
-        glVertex2f(x + (j + 1) * xsquaresize * scaling,
-                   y - (i + 1) * ysquaresize * scaling);
-        glVertex2f(x + (j)*xsquaresize * scaling,
-                   y - (i + 1) * ysquaresize * scaling);
-        glEnd();
-
-        */
 
   glBegin(GL_QUADS);
   glVertex2f(x + (xbezel)*xsquaresize * scaling,
@@ -729,7 +712,7 @@ void display_one_bloc(int indice_color, float scaling, float x, float y) {
 int actualisation_slideboard() {
   int i, j;
   int again = 0;
-  cout << "ACTUAL SLIDEB" << endl;
+
 
   for (i = 0; i < g->larg; i++) {
     for (j = g->haut - 1; j >= 0; j--) {
@@ -754,8 +737,10 @@ int actualisation_slideboard() {
 void slide() {
   int nbslide;
   int i, j;
+  int again = 0;
+  int start_anim = 0;
 
-  cout << "MAGIQUE" << endl;
+
 
   for (j = 0; j < g->haut; j++) {
     for (i = 0; i < g->larg; i++) {
@@ -770,11 +755,10 @@ void slide() {
   if (g->slide >= ysquaresize) {
     g->slide = 0;
     if (actualisation_slideboard() == 0) {
-      cout << "STOPSsLIDE" << endl;
+
       g->anim_slide = 0;
     }
   }
-  cout << "BLABLA" << endl;
 }
 
 void print_slide_b() {
@@ -787,9 +771,20 @@ void print_slide_b() {
   }
 }
 
+void s_sleep(int seconds) {
+  time_t start_time = 0;
+  time_t current_time = 0;
+
+  start_time = time(NULL);
+  while (current_time - start_time + 1 <= seconds) {
+    current_time = time(NULL);
+  }
+}
+
 void ProcessNormalKeys(unsigned char key, int x, int y) {
   int i;
   int start_anim = 0;
+  int combo_score = 0;
 
   if (key == ' ') {
     cout << "SPACEBAR" << endl;
@@ -811,111 +806,70 @@ void ProcessNormalKeys(unsigned char key, int x, int y) {
     } else if (validate_size == 1) {
       playing_game *= -1;
       validate_size *= -1;
-      cout << "shape_select" << shape_select << endl;
-      ;
-      cout << "shape" << shape << endl;
       shape = shape_select + 1;
       create_board(shape, width);
-      cout << shape_select << endl;
       init_color_tabl();
       color_table();
 
     } else if (playing_game == 1) {
-      /*
-  shape = shape_select;
-        cout << "AZE" << endl;
-  create_board(shape, width);
-  cout << "AZER" << endl;
-    init_color_tabl();
-color_table();
-*/
+
       if (g->choosing == 0) {
-        cout << "111" << endl;
+
         placement_bloc(current_b);
         g->choosing = (g->choosing + 1) % 2;
-        for (i = 0; i < g->larg; i++) {
-          if (column_full(i)) {
-            delete_col(i);
-          }
-        }
+        
+        
+        
 
-        for (i = 0; i < g->haut; i++) {
-          if (row_is_full(i)) {
-            valeur_row_slideboard(i);
-            delete_row(i);
-            start_anim = 1;
-          }
-        }
-        if (start_anim == 1) {
-          set_slide_board();
-          print_slide_b();
-          g->anim_slide = 1;
-          start_anim = 0;
-        }
-        /*
-        for (i = 0; i < g->larg; i++) {
-          if (column_full(i)) {
-            delete_col(i);
-          }
-        }
-        */
-      } else {
-        cout << "222" << endl;
-        free(current_b);
-        current_b = (bloc*)malloc(sizeof(*current_b));
-        create_bloc(current_b, g->tabl_bloc[indice_bloc].type);
-        cout << "CAN_BE_INIT" << can_be_init(current_b) << endl;
-        g->choosing = (g->choosing + 1) % 2;
-      }
-    }
-    if (key == 'm') {
-      show_menu *= -1;
-    }
-    if (key == 'n') {
-      transition *= -1;
-    }
-    if (key == 'v') {
-      validate_size *= -1;
-      transition *= -1;
-      // show_menu *= -1;
-    }
-    /*
-    if (key == 's') {
-      shape_select *= -1;
-    }
-    */
+        g->again = 1;
+        
+        score += (float) combo_score * accu_score / 10000.0;
+        cout << "ACCU SCORE : " << accu_score << endl;
+        cout << "COMBO SCORE : " << combo_score << endl;
+        cout << "SCORE : " << score << endl;
+        combo_score = 0;
+        accu_score = 0;
 
-    if (key == 'b') {
-      transition *= -1;
-    }
-    if (key == 'p') {
-      width += 2;
-    }
-    /*
-    if (key == '1') {
-      if (choose_politique == 1) {
-        choose_politique *= -1;
-        show_menu *= -1;
-        politique = 1;
+        
+      
+
+      for (i = 0; i < g->larg; i++) {
+        if (column_full(i)) {
+          delete_col(i);
+          combo_score += 1;
+        }
       }
-    }
-        if (key == '2') {
-      if (choose_politique == 1) {
-        choose_politique *= -1;
-        show_menu *= -1;
-        politique = 2;
+
+      cout << "ACCU SCORE : " << accu_score << endl;
+      cout << "COMBO SCORE : " << combo_score << endl;
+      
+      score += (float)combo_score * accu_score / 10000.0;
+      cout << "SCORE : " << score << endl;
+      combo_score = 0;
+      accu_score = 0;
       }
+    
+
+    else {
+
+      free(current_b);
+      current_b = (bloc*)malloc(sizeof(*current_b));
+      create_bloc(current_b, g->tabl_bloc[indice_bloc].type);
+      g->choosing = (g->choosing + 1) % 2;
     }
-    */
   }
-  glutPostRedisplay();
+
+  }
+
+
+glutPostRedisplay();
 }
 
 void keyboardown(int key, int x, int y) {
   int i;
   switch (key) {
     case GLUT_KEY_RIGHT:
-      if (validate_size == 1) {
+       if (validate_size == 1) {
         width += 2;
       }
       if (choose_politique == 1) {
@@ -924,9 +878,14 @@ void keyboardown(int key, int x, int y) {
       if (show_menu == 1 && playing_game != 1) {
         shape_select += 1;
       }
-      if (g->choosing == 0) {
-        if (can_right(current_b, g) == 1) {
-          right(current_b);
+      if (playing_game == 1) {
+        if (g->choosing == 0) {
+          if (can_right(current_b, g) == 1) {
+            right(current_b);
+          }
+        } else {
+          counter = 0;
+          select_counter = -1;
         }
       }
       break;
@@ -947,11 +906,23 @@ void keyboardown(int key, int x, int y) {
           if (can_left(current_b, g) == 1) {
             left(current_b);
           }
+        } else {
+          counter = 0;
+          select_counter = 1;
         }
       }
       break;
 
     case GLUT_KEY_UP:
+      if (validate_size == 1) {
+        width -= 2;
+      }
+      if (show_menu == 1 && playing_game != 1) {
+        shape_select -= 1;
+      }
+      if (choose_politique == 1) {
+        politique--;
+      }
       if (playing_game == 1) {
         if (g->choosing == 0) {
           if (can_top(current_b, g) == 1) {
@@ -960,12 +931,21 @@ void keyboardown(int key, int x, int y) {
         } else {
           counter = 0;
           select_counter = 1;
-          // indice_bloc = (indice_bloc - 1 + g->nb_bloc) % g->nb_bloc;
+
         }
       }
       break;
 
     case GLUT_KEY_DOWN:
+      if (validate_size == 1) {
+        width += 2;
+      }
+      if (choose_politique == 1) {
+        politique++;
+      }
+      if (show_menu == 1 && playing_game != 1) {
+        shape_select += 1;
+      }
       if (playing_game == 1) {
         if (g->choosing == 0) {
           if (can_bot(current_b, g) == 1) {
@@ -974,7 +954,7 @@ void keyboardown(int key, int x, int y) {
         } else {
           counter = 0;
           select_counter = -1;
-          // indice_bloc = (indice_bloc + 1) % g->nb_bloc;
+
         }
       }
       break;
@@ -989,9 +969,17 @@ void keyboardown(int key, int x, int y) {
       if (show_menu == 1 && playing_game != 1) {
         shape_select += 1;
       }
-      if (can_right(current_b, g) == 1) {
-        right(current_b);
+      if (playing_game == 1) {
+        if (g->choosing == 0) {
+          if (can_right(current_b, g) == 1) {
+            right(current_b);
+          }
+        } else {
+          counter = 0;
+          select_counter = -1;
+        }
       }
+
       break;
     default:
       break;
@@ -1008,7 +996,7 @@ void display_frame(float scaling,
   glColor3f(r, g, blue);
   int i = 1;
   int j = 1;
-  /////////////////////////////////////////////////////
+
   glColor3f(r + 0.4 * (1 - r), g + 0.4 * (1 - r), blue + 0.4 * (1 - r));
   glBegin(GL_QUADS);
   glVertex2f(x + (j)*xsquaresize * scaling, y - (i)*ysquaresize * scaling);
@@ -1065,19 +1053,7 @@ void display_bloc(bloc* b,
   for (i = 0; i < b->haut; i++) {
     for (j = 0; j < b->larg; j++) {
       if (b->mat[i][j] == 1) {
-        /*
-        glColor3f(r, g, blue);
-        glBegin(GL_QUADS);
-        glVertex2f(x + j * xsquaresize * scaling,
-                   y - i * ysquaresize * scaling);
-        glVertex2f(x + (j + 1) * xsquaresize * scaling,
-                   y - i * ysquaresize * scaling);
-        glVertex2f(x + (j + 1) * xsquaresize * scaling,
-                   y - (i + 1) * ysquaresize * scaling);
-        glVertex2f(x + (j)*xsquaresize * scaling,
-                   y - (i + 1) * ysquaresize * scaling);
-        glEnd();
-        */
+     
         glColor3f(r, g, blue);
         glBegin(GL_QUADS);
         glVertex2f(x + (j + xbezel) * xsquaresize * scaling,
@@ -1137,21 +1113,7 @@ void display_bloc(bloc* b,
       }
     }
   }
-  /*
 
-    for (i = 0; i < b->haut; i++) {
-      for (j = 0; j < b->larg; j++) {
-        if (b->mat[i][j] == 1) {
-          glBegin(GL_QUADS);
-          glVertex2f(x + j * xsquaresize * scaling, y - i * ysquaresize *
-    scaling); glVertex2f(x + (j + 1) * xsquaresize * scaling, y - i *
-    ysquaresize * scaling); glVertex2f(x + (j + 1) * xsquaresize * scaling, y
-    - (i + 1) * ysquaresize * scaling); glVertex2f(x + (j)*xsquaresize *
-    scaling, y - (i + 1) * ysquaresize * scaling); glEnd();
-        }
-      }
-    }
-*/
 }
 
 void dis(game* g,
@@ -1237,10 +1199,10 @@ void black() {
 }
 
 void display() {
-    cout << "SCORE" << score << endl;
+  int start_anim = 0;
+  int combo_score = 0;
+  //cout << "SCORE" << score << endl;
   black();
-  cout << width << endl;
-  cout << shape_select << endl;
   if (shape_select < 0) {
     shape_select = 2;
   }
@@ -1318,8 +1280,39 @@ void display() {
         glEnd();
         */
 
+    if (g->again = 1) {
+      g->again = 0;
+      for (int i = 0; i < g->haut; i++) {
+        if (row_is_full(i)) {
+          g->again = 1;
+          valeur_row_slideboard(i);
+          delete_row(i);
+          combo_score += 1;
+          start_anim = 1;
+        }
+      }
+
+
+
+      cout << "ACCU SCORE : " << accu_score << endl;
+      cout << "COMBO SCORE : " << combo_score << endl;
+      
+      score += (float)combo_score * accu_score / 10000.0;
+      cout << "SCORE : " << score << endl;
+      combo_score = 0;
+      accu_score = 0;
+
+
+
+      if (start_anim == 1) {
+        start_anim = 0;
+        set_slide_board();
+        // print_slide_b();
+        g->anim_slide = 1;
+      }
+    }
     if (g->anim_slide == 1) {
-      display_one_bloc(5, 1, 0.5, 0.5);
+      // display_one_bloc(5, 1, 0.5, 0.5);
       slide();
     }
 
@@ -1421,34 +1414,7 @@ void display() {
 int main(int argc, char** argv) {
   int i;
   current_b = (bloc*)malloc(sizeof(*current_b));
-  /*
 
-    shape = shape_select;
-    create_board(shape, width);
-    cout << "AZER" << endl;
-    init_color_tabl();
-    color_table();
-
-
-  */
-
-  /*
-create_board(3);
-blocT5( );
-add_bloc();
-display_board();
-cout << endl << endl;
-display_bloc();
-*/
-  //  test_init_blocs();
-
-  /*
-bestiaire(57,57);
-
-for(i=0 ; i<10 ; i++){
-cout << rand_a_b(0,100);
-}
-*/
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
   glutInitWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);

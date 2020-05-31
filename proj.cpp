@@ -47,8 +47,11 @@ struct game {
   int choosing;
   int anim_slide;
   float slide;
+  int again;
 };
 typedef struct game game;
+
+float accu_score = 0.0;
 
 // On suppose a<b
 int rand_a_b(int a, int b) {
@@ -71,10 +74,6 @@ void init_color_tabl() {
         1 / (double(rand_a_b(2, 10))) + 1 / (double(rand_a_b(2, 10)));
     g->color_tabl[i].b =
         1 / (double(rand_a_b(2, 10))) + 1 / (double(rand_a_b(2, 10)));
-    cout << i << endl;
-    cout << g->color_tabl[i].r << " / " << g->color_tabl[i].g << " / "
-         << g->color_tabl[i].b << endl
-         << endl;
   }
 }
 
@@ -566,7 +565,6 @@ void set_slide_board(){
   int i;
 
   for(i=0 ; i<g->larg ; i++){
-    cout << "GRIS" << i << endl;
     init_slide_val(i);
   }
 }
@@ -577,6 +575,7 @@ void delete_col(int c) {
 
   for (i = 0; i < g->haut; i++) {
     if (g->board[i][c] > 1) {
+      accu_score += 1;
       g->board[i][c] = 1;
     }
   }
@@ -587,6 +586,7 @@ void delete_row(int r) {
 
   for (i = 0; i < g->larg; i++) {
     if (g->board[r][i] > 1) {
+      accu_score += 1;
       g->board[r][i] = 1;
     }
   }
@@ -1590,6 +1590,7 @@ void alloc_board(int m, int n) {
   g->haut = m;
   g->score = 0;
   g->choosing = 1;
+  g->again = 0;
   g->board = (int**)malloc(m * sizeof(*(g->board)));
   g->slide_board = (value_sb**)malloc(m * sizeof(*(g->slide_board)));
   for (i = 0; i < m; i++) {
@@ -1621,7 +1622,6 @@ void display_board() {
 }
 
 void create_bloc(bloc* b, int type) {
-  cout << "C" << endl << endl;
 
   switch (type) {
     case 0:
@@ -1898,7 +1898,6 @@ void create_board(int type, int width) {
 
       for (i = 0; i < n; i++) {
         for (j = 0; j < n; j++) {
-          cout << i << " / " << j << endl;
 
           x = i - width;
           y = j - width;
@@ -1932,7 +1931,6 @@ void bestiaire(int debut, int fin) {
 
   for (i = debut; i <= fin; i++) {
     b = (bloc*)malloc(sizeof(*b));
-    cout << "B" << endl;
     create_bloc(b, i);
     display_bloc(b);
     free(b);
@@ -1941,7 +1939,7 @@ void bestiaire(int debut, int fin) {
 
 void add_bloc(bloc* b, game* g) {
   int i, j;
-  cout << "ADDBLOC" << endl << b->y << endl << b->x << endl << endl;
+
   for (i = 0; i < b->haut; i++) {
     for (j = 0; j < b->larg; j++) {
       if (b->mat[i][j]) {
