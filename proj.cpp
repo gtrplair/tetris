@@ -48,6 +48,7 @@ struct game {
   int anim_slide;
   float slide;
   int again;
+  int loose;
 };
 typedef struct game game;
 

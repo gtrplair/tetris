@@ -813,51 +813,56 @@ void ProcessNormalKeys(unsigned char key, int x, int y) {
 
     } else if (playing_game == 1) {
 
-      if (g->choosing == 0) {
+      if (g->choosing == 0 && g->loose==0) {
 
-        placement_bloc(current_b);
-        g->choosing = (g->choosing + 1) % 2;
+        if(can_be_init(current_b) == 1){
+          placement_bloc(current_b);
+          g->choosing = (g->choosing + 1) % 2;
         
         
         
 
-        g->again = 1;
+          g->again = 1;
         
-        score += (float) combo_score * accu_score / 10000.0;
+          score += (float) combo_score * accu_score / 10000.0;
+          cout << "ACCU SCORE : " << accu_score << endl;
+          cout << "COMBO SCORE : " << combo_score << endl;
+          cout << "SCORE : " << score << endl;
+          combo_score = 0;
+          accu_score = 0;
+
+        
+      
+
+        for (i = 0; i < g->larg; i++) {
+          if (column_full(i)) {
+            delete_col(i);
+            combo_score += 1;
+          }
+        }
+
         cout << "ACCU SCORE : " << accu_score << endl;
         cout << "COMBO SCORE : " << combo_score << endl;
+      
+        score += (float)combo_score * accu_score / 10000.0;
         cout << "SCORE : " << score << endl;
         combo_score = 0;
         accu_score = 0;
-
-        
-      
-
-      for (i = 0; i < g->larg; i++) {
-        if (column_full(i)) {
-          delete_col(i);
-          combo_score += 1;
         }
-      }
-
-      cout << "ACCU SCORE : " << accu_score << endl;
-      cout << "COMBO SCORE : " << combo_score << endl;
-      
-      score += (float)combo_score * accu_score / 10000.0;
-      cout << "SCORE : " << score << endl;
-      combo_score = 0;
-      accu_score = 0;
+        else{
+          g->loose = 1;
+        }
       }
     
 
-    else {
+      else if(g->loose == 0){
 
-      free(current_b);
-      current_b = (bloc*)malloc(sizeof(*current_b));
-      create_bloc(current_b, g->tabl_bloc[indice_bloc].type);
-      g->choosing = (g->choosing + 1) % 2;
+        free(current_b);
+        current_b = (bloc*)malloc(sizeof(*current_b));
+        create_bloc(current_b, g->tabl_bloc[indice_bloc].type);
+        g->choosing = (g->choosing + 1) % 2;
+      }
     }
-  }
 
   }
 
